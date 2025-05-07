@@ -9,7 +9,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
-import { Avatar, List, useTheme, Button, Divider } from 'react-native-paper';
+import { Avatar, Button } from 'react-native-paper';
 import { useRouter } from 'expo-router';
 import api from '../../lib/api';
 
@@ -18,7 +18,6 @@ export default function AccountScreen() {
   const [avatarUri, setAvatarUri] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
-  const theme = useTheme();
 
   useEffect(() => {
     (async () => {
@@ -41,13 +40,22 @@ export default function AccountScreen() {
     router.push(path);
   };
 
-  const renderSectionTitle = (title: string) => (
-    <Text style={styles.sectionTitle}>{title}</Text>
+  const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
+    <View style={styles.sectionCard}>
+      <Text style={styles.sectionTitle}>{title}</Text>
+      {children}
+    </View>
+  );
+
+  const SettingItem = ({ label, onPress }: { label: string; onPress?: () => void }) => (
+    <TouchableOpacity style={styles.item} onPress={onPress}>
+      <Text style={styles.itemText}>{label}</Text>
+    </TouchableOpacity>
   );
 
   return (
     <ScrollView style={styles.container}>
-      {/* Top Profile */}
+      {/* Avatar + Username */}
       <View style={styles.profileTop}>
         <TouchableOpacity onPress={handleNavigate('/avatar')}>
           <Avatar.Image
@@ -77,7 +85,7 @@ export default function AccountScreen() {
         </Button>
       </View>
 
-      {/* Premium */}
+      {/* Premium Box */}
       <View style={styles.premiumBox}>
         <Text style={styles.premiumText}>Amp up your profile</Text>
         <View style={styles.premiumButtons}>
@@ -100,55 +108,51 @@ export default function AccountScreen() {
         </View>
       </View>
 
-      {/* GROUP: Account Settings */}
-      {renderSectionTitle('Account Settings')}
-      <List.Section>
-        <List.Item title="Account" left={() => <List.Icon icon="account" />} onPress={handleNavigate('/settings/account')} />
-        <List.Item title="Content & Social" left={() => <List.Icon icon="account-multiple" />} />
-        <List.Item title="Data & Privacy" left={() => <List.Icon icon="shield-lock-outline" />} />
-        <List.Item title="Family Center" left={() => <List.Icon icon="account-group-outline" />} />
-        <List.Item title="Authorized Apps" left={() => <List.Icon icon="lock-outline" />} />
-        <List.Item title="Devices" left={() => <List.Icon icon="cellphone" />} />
-        <List.Item title="Connections" left={() => <List.Icon icon="link-variant" />} />
-        <List.Item title="Scan QR Code" left={() => <List.Icon icon="qrcode-scan" />} />
-      </List.Section>
+      {/* FlatCard Sections */}
+      <Section title="Account Settings">
+        <SettingItem label="Get Nitro" />
+        <SettingItem label="Account" />
+        <SettingItem label="Content & Social" />
+        <SettingItem label="Data & Privacy" />
+        <SettingItem label="Family Center" />
+        <SettingItem label="Authorized Apps" />
+        <SettingItem label="Devices" />
+        <SettingItem label="Connections" />
+        <SettingItem label="Clips" />
+        <SettingItem label="Scan QR Code" />
+      </Section>
 
-      {/* GROUP: Billing */}
-      {renderSectionTitle('Billing Settings')}
-      <List.Section>
-        <List.Item title="Quests" left={() => <List.Icon icon="target" />} />
-        <List.Item title="Server Boost" left={() => <List.Icon icon="rocket-launch-outline" />} />
-        <List.Item title="Gifting" left={() => <List.Icon icon="gift-outline" />} />
-      </List.Section>
+      <Section title="Billing Settings">
+        <SettingItem label="Quests" />
+        <SettingItem label="Server Boost" />
+        <SettingItem label="Nitro Gifting" />
+      </Section>
 
-      {/* GROUP: App Settings */}
-      {renderSectionTitle('App Settings')}
-      <List.Section>
-        <List.Item title="Voice" left={() => <List.Icon icon="microphone-outline" />} />
-        <List.Item title="Appearance" left={() => <List.Icon icon="palette" />} />
-        <List.Item title="Accessibility" left={() => <List.Icon icon="eye-outline" />} />
-        <List.Item title="Language" description="English" left={() => <List.Icon icon="translate" />} />
-        <List.Item title="Notifications" left={() => <List.Icon icon="bell-outline" />} />
-        <List.Item title="App Icon" left={() => <List.Icon icon="apps" />} />
-        <List.Item title="Advanced" left={() => <List.Icon icon="cog-outline" />} />
-      </List.Section>
+      <Section title="App Settings">
+        <SettingItem label="Voice" />
+        <SettingItem label="Appearance" />
+        <SettingItem label="Accessibility" />
+        <SettingItem label="Language" />
+        <SettingItem label="Chat" />
+        <SettingItem label="Web Browser" />
+        <SettingItem label="Notifications" />
+        <SettingItem label="App Icon" />
+        <SettingItem label="Advanced" />
+      </Section>
 
-      {/* GROUP: Support */}
-      {renderSectionTitle('Support')}
-      <List.Section>
-        <List.Item title="Support Center" left={() => <List.Icon icon="help-circle-outline" />} />
-        <List.Item title="Debug Logs" left={() => <List.Icon icon="bug-outline" />} />
-        <List.Item title="Acknowledgements" left={() => <List.Icon icon="information-outline" />} />
-      </List.Section>
+      <Section title="Support">
+        <SettingItem label="Support" />
+        <SettingItem label="Upload debug logs to Support" />
+        <SettingItem label="Acknowledgements" />
+      </Section>
 
-      {/* Log Out */}
-      <Divider style={{ marginVertical: 8 }} />
-      <List.Item
-        title="Log Out"
-        titleStyle={{ color: '#ff5555', fontWeight: 'bold' }}
-        left={() => <List.Icon icon="logout" color="#ff5555" />}
-        onPress={() => Alert.alert('Log out?', 'Implement log out logic')}
-      />
+      <Section title="What's New">
+        <SettingItem label="What's New" />
+      </Section>
+
+      <Section title="">
+        <SettingItem label="Log Out" onPress={() => Alert.alert('Log out', 'Implement logout logic')} />
+      </Section>
     </ScrollView>
   );
 }
@@ -208,12 +212,27 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     paddingHorizontal: 16,
   },
+  sectionCard: {
+    backgroundColor: '#282a36',
+    margin: 12,
+    borderRadius: 12,
+    padding: 12,
+  },
   sectionTitle: {
-    color: '#f1f1f1',
+    color: '#f8f8f2',
+    fontWeight: 'bold',
+    fontSize: 14,
+    marginBottom: 8,
+    paddingLeft: 8,
+  },
+  item: {
+    paddingVertical: 12,
+    paddingHorizontal: 12,
+    borderBottomColor: '#44475a',
+    borderBottomWidth: 1,
+  },
+  itemText: {
+    color: '#f8f8f2',
     fontSize: 15,
-    fontWeight: '600',
-    marginLeft: 16,
-    marginTop: 24,
-    marginBottom: 4,
   },
 });

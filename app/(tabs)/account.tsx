@@ -4,7 +4,6 @@ import {
   StyleSheet,
   Alert,
   ScrollView,
-  Image,
   TouchableOpacity,
 } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
@@ -46,7 +45,7 @@ export default function AccountScreen() {
             source={
               avatarUri
                 ? { uri: avatarUri }
-                : require('../../assets/avatar-placeholder.png')
+                : require('../../assets/images/avatar-placeholder.png') // fixed path
             }
           />
         </TouchableOpacity>

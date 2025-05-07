@@ -54,15 +54,18 @@ export default function AccountScreen() {
   };
 
   const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
-    <View style={styles.sectionCard}>
+    <>
       <Text style={styles.sectionTitle}>{title}</Text>
-      {children}
-    </View>
+      <View style={styles.sectionCard}>{children}</View>
+    </>
   );
 
   const SettingItem = ({ label, onPress }: { label: string; onPress?: () => void }) => (
     <TouchableOpacity style={styles.item} onPress={onPress}>
-      <Text style={styles.itemText}>{label}</Text>
+      <View style={styles.itemContent}>
+        <Text style={styles.itemText}>{label}</Text>
+        <Text style={styles.itemArrow}>›</Text>
+      </View>
     </TouchableOpacity>
   );
 
@@ -107,6 +110,11 @@ export default function AccountScreen() {
             Shop
           </Button>
         </View>
+      </View>
+
+      {/* Search Bar */}
+      <View style={styles.searchBox}>
+        <Text style={styles.searchPlaceholder}>Search</Text>
       </View>
 
       {/* FlatCard Sections */}
@@ -209,18 +217,33 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     paddingHorizontal: 16,
   },
+  searchBox: {
+    backgroundColor: '#2e2e3e',
+    marginHorizontal: 16,
+    marginTop: 8,
+    marginBottom: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 12,
+  },
+  searchPlaceholder: {
+    color: '#888',
+    fontSize: 15,
+    fontStyle: 'italic',
+  },
   sectionCard: {
     backgroundColor: '#282a36',
-    margin: 12,
+    marginHorizontal: 12,
     borderRadius: 12,
-    padding: 12,
+    padding: 4,
   },
   sectionTitle: {
     color: '#f8f8f2',
     fontWeight: 'bold',
     fontSize: 14,
-    marginBottom: 8,
-    paddingLeft: 8,
+    marginTop: 24,
+    marginBottom: 6,
+    paddingHorizontal: 18,
   },
   item: {
     paddingVertical: 12,
@@ -228,8 +251,17 @@ const styles = StyleSheet.create({
     borderBottomColor: '#44475a',
     borderBottomWidth: 1,
   },
+  itemContent: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
   itemText: {
     color: '#f8f8f2',
     fontSize: 15,
+  },
+  itemArrow: {
+    color: '#888',
+    fontSize: 18,
   },
 });

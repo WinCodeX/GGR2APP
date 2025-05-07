@@ -8,6 +8,11 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         tabBarShowLabel: false,
+        headerShown: false,
+        tabBarActiveTintColor: '#bd93f9', // Dracula active
+        tabBarInactiveTintColor: '#6272a4', // Dracula muted
+
+        // ✅ Center icons vertically in tab
         tabBarStyle: {
           position: 'absolute',
           bottom: 20,
@@ -16,20 +21,25 @@ export default function TabLayout() {
           height: 70,
           backgroundColor: '#1e1e2f',
           borderRadius: 40,
-          paddingHorizontal: 10,
+          borderTopWidth: 0,
+          alignItems: 'center',
+          justifyContent: 'center',
+
           shadowColor: '#000',
           shadowOffset: { width: 0, height: 6 },
           shadowOpacity: 0.3,
           shadowRadius: 10,
           elevation: 10,
-          borderTopWidth: 0,
           ...Platform.select({
             android: { elevation: 0 },
           }),
         },
-        tabBarActiveTintColor: '#bd93f9',
-        tabBarInactiveTintColor: '#6272a4',
-        headerShown: false,
+
+        // ✅ Ensures each tab icon is centered in its slot
+        tabBarItemStyle: {
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
       }}
     >
       <Tabs.Screen

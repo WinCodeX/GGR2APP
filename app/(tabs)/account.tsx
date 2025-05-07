@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
 import {
   View,
   StyleSheet,
@@ -11,6 +11,7 @@ import {
 import * as SecureStore from 'expo-secure-store';
 import { Avatar, Button } from 'react-native-paper';
 import { useRouter } from 'expo-router';
+import { useNavigation } from '@react-navigation/native';
 import api from '../../lib/api';
 
 export default function AccountScreen() {
@@ -18,6 +19,19 @@ export default function AccountScreen() {
   const [avatarUri, setAvatarUri] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
+  const navigation = useNavigation();
+
+  // Hide bottom tab on this screen
+  useLayoutEffect(() => {
+    navigation.getParent()?.setOptions({
+      tabBarStyle: { display: 'none' },
+    });
+    return () => {
+      navigation.getParent()?.setOptions({
+        tabBarStyle: { display: 'flex' },
+      });
+    };
+  }, [navigation]);
 
   useEffect(() => {
     (async () => {

@@ -1,22 +1,21 @@
-import { Tabs } from 'expo-router';
+// TabLayout.tsx
 import { Ionicons } from '@expo/vector-icons';
+import { Tabs } from 'expo-router';
 import React from 'react';
-import { StyleSheet } from 'react-native';
 
 export default function TabLayout() {
   return (
     <Tabs
       screenOptions={({ route }) => ({
-        tabBarShowLabel: true, // Show labels like WhatsApp
+        tabBarShowLabel: true,
         tabBarLabelStyle: {
           fontSize: 11,
           marginTop: -4,
           fontWeight: '500',
         },
         headerShown: false,
-        tabBarActiveTintColor: '#bd93f9',   // Dracula purple
-        tabBarInactiveTintColor: '#6272a4', // Muted Dracula blue
-
+        tabBarActiveTintColor: '#bd93f9',
+        tabBarInactiveTintColor: '#6272a4',
         tabBarStyle: {
           position: 'absolute',
           bottom: 20,
@@ -34,14 +33,12 @@ export default function TabLayout() {
           shadowRadius: 10,
           elevation: 10,
         },
-
         tabBarItemStyle: {
           justifyContent: 'center',
           alignItems: 'center',
         },
-
         tabBarIcon: ({ color, focused }) => {
-          let iconName: string;
+          let iconName: keyof typeof Ionicons.glyphMap;
           switch (route.name) {
             case 'index':
               iconName = focused ? 'home' : 'home-outline';

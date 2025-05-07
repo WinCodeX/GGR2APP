@@ -9,7 +9,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
-import { Avatar, List, useTheme, Button } from 'react-native-paper';
+import { Avatar, List, useTheme, Button, Divider } from 'react-native-paper';
 import { useRouter } from 'expo-router';
 import api from '../../lib/api';
 
@@ -29,7 +29,7 @@ export default function AccountScreen() {
         });
         setUserName(res.data.name || 'Unknown User');
         setAvatarUri(res.data.avatar_url);
-      } catch (error) {
+      } catch {
         Alert.alert('Error', 'Unable to load profile.');
       } finally {
         setLoading(false);
@@ -41,8 +41,13 @@ export default function AccountScreen() {
     router.push(path);
   };
 
+  const renderSectionTitle = (title: string) => (
+    <Text style={styles.sectionTitle}>{title}</Text>
+  );
+
   return (
     <ScrollView style={styles.container}>
+      {/* Top Profile */}
       <View style={styles.profileTop}>
         <TouchableOpacity onPress={handleNavigate('/avatar')}>
           <Avatar.Image
@@ -72,6 +77,7 @@ export default function AccountScreen() {
         </Button>
       </View>
 
+      {/* Premium */}
       <View style={styles.premiumBox}>
         <Text style={styles.premiumText}>Amp up your profile</Text>
         <View style={styles.premiumButtons}>
@@ -94,38 +100,55 @@ export default function AccountScreen() {
         </View>
       </View>
 
+      {/* GROUP: Account Settings */}
+      {renderSectionTitle('Account Settings')}
       <List.Section>
-        <List.Item
-          title="Orders"
-          description="View past & current deliveries"
-          left={(props) => <List.Icon {...props} icon="package-variant" />}
-          onPress={handleNavigate('/orders')}
-        />
-        <List.Item
-          title="Notifications"
-          description="Manage push and app alerts"
-          left={(props) => <List.Icon {...props} icon="bell-outline" />}
-          onPress={handleNavigate('/notifications')}
-        />
-        <List.Item
-          title="Storage & Data"
-          description="Usage stats, cache control"
-          left={(props) => <List.Icon {...props} icon="database-outline" />}
-          onPress={handleNavigate('/storage')}
-        />
-        <List.Item
-          title="Language"
-          description="App language preferences"
-          left={(props) => <List.Icon {...props} icon="translate" />}
-          onPress={handleNavigate('/language')}
-        />
-        <List.Item
-          title="Help & Support"
-          description="Contact support, policies"
-          left={(props) => <List.Icon {...props} icon="help-circle-outline" />}
-          onPress={handleNavigate('/help')}
-        />
+        <List.Item title="Account" left={() => <List.Icon icon="account" />} onPress={handleNavigate('/settings/account')} />
+        <List.Item title="Content & Social" left={() => <List.Icon icon="account-multiple" />} />
+        <List.Item title="Data & Privacy" left={() => <List.Icon icon="shield-lock-outline" />} />
+        <List.Item title="Family Center" left={() => <List.Icon icon="account-group-outline" />} />
+        <List.Item title="Authorized Apps" left={() => <List.Icon icon="lock-outline" />} />
+        <List.Item title="Devices" left={() => <List.Icon icon="cellphone" />} />
+        <List.Item title="Connections" left={() => <List.Icon icon="link-variant" />} />
+        <List.Item title="Scan QR Code" left={() => <List.Icon icon="qrcode-scan" />} />
       </List.Section>
+
+      {/* GROUP: Billing */}
+      {renderSectionTitle('Billing Settings')}
+      <List.Section>
+        <List.Item title="Quests" left={() => <List.Icon icon="target" />} />
+        <List.Item title="Server Boost" left={() => <List.Icon icon="rocket-launch-outline" />} />
+        <List.Item title="Gifting" left={() => <List.Icon icon="gift-outline" />} />
+      </List.Section>
+
+      {/* GROUP: App Settings */}
+      {renderSectionTitle('App Settings')}
+      <List.Section>
+        <List.Item title="Voice" left={() => <List.Icon icon="microphone-outline" />} />
+        <List.Item title="Appearance" left={() => <List.Icon icon="palette" />} />
+        <List.Item title="Accessibility" left={() => <List.Icon icon="eye-outline" />} />
+        <List.Item title="Language" description="English" left={() => <List.Icon icon="translate" />} />
+        <List.Item title="Notifications" left={() => <List.Icon icon="bell-outline" />} />
+        <List.Item title="App Icon" left={() => <List.Icon icon="apps" />} />
+        <List.Item title="Advanced" left={() => <List.Icon icon="cog-outline" />} />
+      </List.Section>
+
+      {/* GROUP: Support */}
+      {renderSectionTitle('Support')}
+      <List.Section>
+        <List.Item title="Support Center" left={() => <List.Icon icon="help-circle-outline" />} />
+        <List.Item title="Debug Logs" left={() => <List.Icon icon="bug-outline" />} />
+        <List.Item title="Acknowledgements" left={() => <List.Icon icon="information-outline" />} />
+      </List.Section>
+
+      {/* Log Out */}
+      <Divider style={{ marginVertical: 8 }} />
+      <List.Item
+        title="Log Out"
+        titleStyle={{ color: '#ff5555', fontWeight: 'bold' }}
+        left={() => <List.Icon icon="logout" color="#ff5555" />}
+        onPress={() => Alert.alert('Log out?', 'Implement log out logic')}
+      />
     </ScrollView>
   );
 }
@@ -184,5 +207,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 16,
     paddingHorizontal: 16,
+  },
+  sectionTitle: {
+    color: '#f1f1f1',
+    fontSize: 15,
+    fontWeight: '600',
+    marginLeft: 16,
+    marginTop: 24,
+    marginBottom: 4,
   },
 });

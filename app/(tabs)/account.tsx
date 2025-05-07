@@ -248,8 +248,7 @@ const styles = StyleSheet.create({
   item: {
     paddingVertical: 12,
     paddingHorizontal: 12,
-    borderBottomColor: '#44475a',
-    borderBottomWidth: 1,
+    
   },
   itemContent: {
     flexDirection: 'row',

@@ -13,7 +13,7 @@ import { useRouter } from 'expo-router';
 import api from '../../lib/api';
 
 export default function AccountScreen() {
-  const [userName, setUserName] = useState('~lvlØ~');
+  const [userName, setUserName] = useState<string>(''); // NEW
   const [avatarUri, setAvatarUri] = useState<string | undefined>(undefined);
   const router = useRouter();
   const theme = useTheme();

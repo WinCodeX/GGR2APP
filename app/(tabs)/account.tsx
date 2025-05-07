@@ -21,7 +21,6 @@ export default function AccountScreen() {
   const router = useRouter();
   const navigation = useNavigation();
 
-  // Hide bottom tab on this screen
   useLayoutEffect(() => {
     navigation.getParent()?.setOptions({
       tabBarStyle: { display: 'none' },
@@ -69,9 +68,9 @@ export default function AccountScreen() {
 
   return (
     <ScrollView style={styles.container}>
-      {/* User Header */}
-      <View style={styles.userCard}>
-        <View style={styles.userInfoLeft}>
+      {/* User Identity Card */}
+      <View style={styles.identityCard}>
+        <View style={styles.identityLeft}>
           <Text style={styles.userName}>{userName || 'No name'}</Text>
           <Text style={styles.accountType}>Client account</Text>
         </View>
@@ -164,17 +163,16 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#1e1e2e',
   },
-  userCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+  identityCard: {
     backgroundColor: '#282a36',
-    paddingHorizontal: 16,
-    paddingVertical: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#44475a',
+    margin: 16,
+    borderRadius: 12,
+    padding: 16,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
-  userInfoLeft: {
+  identityLeft: {
     flexDirection: 'column',
   },
   userName: {

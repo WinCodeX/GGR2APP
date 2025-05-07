@@ -14,10 +14,12 @@ export default function LoginScreen() {
   const theme = useTheme();
 
   const handleLogin = async () => {
-    setErrorMsg(''); // Clear previous error
+    setErrorMsg('');
     try {
+      // FIXED: Send email and password directly instead of inside 'user'
       const response = await api.post('/login', {
-        user: { email, password },
+        email,
+        password,
       });
 
       const token = response?.data?.token;

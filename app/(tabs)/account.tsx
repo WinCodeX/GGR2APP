@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react'; import { View, StyleSheet, Text, Image, TouchableOpacity, Alert } from 'react-native'; import * as SecureStore from 'expo-secure-store'; import * as ImagePicker from 'expo-image-picker'; import { TextInput, Button, useTheme } from 'react-native-paper'; import { useRouter } from 'expo-router'; import api from '../../lib/api'; import Images from '../../assets';
+import React, { useState, useEffect } from 'react'; import { View, StyleSheet, Text, Image, TouchableOpacity, Alert, } from 'react-native'; import * as SecureStore from 'expo-secure-store'; import * as ImagePicker from 'expo-image-picker'; import { TextInput, Button, useTheme } from 'react-native-paper'; import { useRouter } from 'expo-router'; import api from '../../lib/api'; import Images from '../../assets';
 
 export default function AccountScreen() { const [user, setUser] = useState<{ name: string; avatar: string | null }>({ name: '', avatar: null }); const [editingName, setEditingName] = useState(false); const [newName, setNewName] = useState(''); const [updating, setUpdating] = useState(false); const router = useRouter(); const theme = useTheme();
 
-// Fetch user data on mount useEffect(() => { (async () => { try { const token = await SecureStore.getItemAsync('auth_token'); const res = await api.get('/me', { headers: { Authorization: Bearer ${token} } }); setUser(res.data); setNewName(res.data.name); } catch (error: any) { console.error('Fetch user error:', error); Alert.alert('Error', 'Unable to load profile.'); } })(); }, []);
+useEffect(() => { const fetchUser = async () => { try { const token = await SecureStore.getItemAsync('auth_token'); const res = await api.get('/me', { headers: { Authorization: Bearer ${token} }, }); setUser(res.data); setNewName(res.data.name); } catch (error: any) { console.error('Fetch user error:', error); Alert.alert('Error', 'Unable to load profile.'); } }; fetchUser(); }, []);
 
-// Update name handler const handleUpdateName = async () => { setUpdating(true); try { const token = await SecureStore.getItemAsync('auth_token'); const res = await api.put( '/me', { name: newName }, { headers: { Authorization: Bearer ${token} } } ); setUser(prev => ({ ...prev, name: res.data.name })); setEditingName(false); } catch (error: any) { console.error('Update name error:', error); Alert.alert('Error', 'Unable to update name.'); } setUpdating(false); };
+const handleUpdateName = async () => { setUpdating(true); try { const token = await SecureStore.getItemAsync('auth_token'); const res = await api.put( '/me', { name: newName }, { headers: { Authorization: Bearer ${token} } } ); setUser((prev) => ({ ...prev, name: res.data.name })); setEditingName(false); } catch (error: any) { console.error('Update name error:', error); Alert.alert('Error', 'Unable to update name.'); } setUpdating(false); };
 
-// Image picker and upload const pickImageAndUpload = async () => { const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync(); if (status !== 'granted') { Alert.alert('Permission required', 'Permission to access gallery is required!'); return; } const result = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ImagePicker.MediaTypeOptions.Images, allowsEditing: true, });
+const pickImageAndUpload = async () => { const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync(); if (status !== 'granted') { Alert.alert('Permission required', 'Permission to access gallery is required!'); return; } const result = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ImagePicker.MediaTypeOptions.Images, allowsEditing: true, });
 
 if (!result.canceled) {
   const uri = result.assets[0].uri;
@@ -15,11 +15,7 @@ if (!result.canceled) {
   const type = match ? `image/${match[1]}` : 'image';
 
   const formData = new FormData();
-  formData.append('avatar', {
-    uri,
-    name: filename,
-    type,
-  } as any);
+  formData.append('avatar', { uri, name: filename, type } as any);
 
   try {
     const token = await SecureStore.getItemAsync('auth_token');
@@ -33,7 +29,7 @@ if (!result.canceled) {
     });
     const data = await response.json();
     if (data.avatar_url) {
-      setUser(prev => ({ ...prev, avatar: data.avatar_url }));
+      setUser((prev) => ({ ...prev, avatar: data.avatar_url }));
     } else {
       throw new Error('No avatar_url returned');
     }
@@ -44,6 +40,8 @@ if (!result.canceled) {
 }
 
 };
+
+const handleLogout = async () => { await SecureStore.deleteItemAsync('auth_token'); router.replace('/login'); };
 
 return ( <View style={styles.container}> {/* Avatar */} <TouchableOpacity onPress={pickImageAndUpload} disabled={updating}> <Image source={user.avatar ? { uri: user.avatar } : Images.avatarPlaceholder} style={styles.avatar} /> </TouchableOpacity>
 
@@ -69,7 +67,7 @@ return ( <View style={styles.container}> {/* Avatar */} <TouchableOpacity onPres
             background: '#282a36',
             placeholder: '#6272a4',
             primary: '#bd93f9',
-          }
+          },
         }}
         outlineColor="#44475a"
         activeOutlineColor="#bd93f9"
@@ -86,7 +84,7 @@ return ( <View style={styles.container}> {/* Avatar */} <TouchableOpacity onPres
     </>
   )}
 
-  {/* CTA */}
+  {/* Business CTA */}
   <TouchableOpacity
     style={styles.businessButton}
     onPress={() => router.push('/business/create')}
@@ -99,10 +97,7 @@ return ( <View style={styles.container}> {/* Avatar */} <TouchableOpacity onPres
     <AccountRow title="Edit Profile" onPress={() => router.push('/edit-profile')} />
     <AccountRow title="Payment" onPress={() => router.push('/payment')} />
     <AccountRow title="Subscription" onPress={() => router.push('/subscription')} />
-    <AccountRow title="Log Out" logout onPress={async () => {
-      await SecureStore.deleteItemAsync('auth_token');
-      router.replace('/login');
-    }} />
+    <AccountRow title="Log Out" logout onPress={handleLogout} />
   </View>
 </View>
 

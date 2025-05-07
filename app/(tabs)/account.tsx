@@ -26,7 +26,7 @@ export default function AccountScreen() {
         const res = await api.get('/me', {
           headers: { Authorization: `Bearer ${token}` },
         });
-        setUserName(res.data.name || 'Unknown User');
+        setUserName(res.data.name || null);
         setAvatarUri(res.data.avatar_url);
       } catch {
         Alert.alert('Error', 'Unable to load profile.');
@@ -55,11 +55,15 @@ export default function AccountScreen() {
 
   return (
     <ScrollView style={styles.container}>
-      {/* Avatar + Username */}
-      <View style={styles.profileTop}>
+      {/* User Header */}
+      <View style={styles.userCard}>
+        <View style={styles.userInfoLeft}>
+          <Text style={styles.userName}>{userName || 'No name'}</Text>
+          <Text style={styles.accountType}>Client account</Text>
+        </View>
         <TouchableOpacity onPress={handleNavigate('/avatar')}>
           <Avatar.Image
-            size={80}
+            size={60}
             source={
               avatarUri
                 ? { uri: avatarUri }
@@ -67,22 +71,6 @@ export default function AccountScreen() {
             }
           />
         </TouchableOpacity>
-        <View style={styles.userInfo}>
-          <Text style={styles.level}>LVL0</Text>
-          {loading ? (
-            <ActivityIndicator color="#f8f8f2" size="small" />
-          ) : (
-            <Text style={styles.username}>{userName}</Text>
-          )}
-        </View>
-        <Button
-          mode="contained"
-          onPress={handleNavigate('/profile')}
-          style={styles.editButton}
-          labelStyle={{ color: '#fff' }}
-        >
-          Edit Profile
-        </Button>
       </View>
 
       {/* Premium Box */}
@@ -162,31 +150,28 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#1e1e2e',
   },
-  profileTop: {
-    flexDirection: 'column',
+  userCard: {
+    flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 24,
+    justifyContent: 'space-between',
     backgroundColor: '#282a36',
+    paddingHorizontal: 16,
+    paddingVertical: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#44475a',
   },
-  userInfo: {
-    alignItems: 'center',
-    marginTop: 12,
+  userInfoLeft: {
+    flexDirection: 'column',
   },
-  level: {
-    color: '#bd93f9',
-    fontWeight: 'bold',
+  userName: {
+    color: '#ffffff',
     fontSize: 18,
+    fontWeight: 'bold',
   },
-  username: {
-    color: '#f8f8f2',
-    fontSize: 16,
+  accountType: {
+    color: '#888888',
+    fontSize: 14,
     marginTop: 4,
-  },
-  editButton: {
-    marginTop: 16,
-    backgroundColor: '#44475a',
-    borderRadius: 20,
-    paddingHorizontal: 24,
   },
   premiumBox: {
     backgroundColor: '#2e2e3e',

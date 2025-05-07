@@ -9,10 +9,10 @@ export default function TabLayout() {
       screenOptions={{
         tabBarShowLabel: false,
         headerShown: false,
-        tabBarActiveTintColor: '#bd93f9', // Dracula active
-        tabBarInactiveTintColor: '#6272a4', // Dracula muted
+        tabBarActiveTintColor: '#bd93f9',       // Dracula purple (active)
+        tabBarInactiveTintColor: '#6272a4',     // Dracula blue (inactive)
 
-        // ✅ Center icons vertically in tab
+        // ✅ Tab bar container styling
         tabBarStyle: {
           position: 'absolute',
           bottom: 20,
@@ -22,21 +22,17 @@ export default function TabLayout() {
           backgroundColor: '#1e1e2f',
           borderRadius: 40,
           borderTopWidth: 0,
-          alignItems: 'center',
-          justifyContent: 'center',
 
           shadowColor: '#000',
           shadowOffset: { width: 0, height: 6 },
           shadowOpacity: 0.3,
           shadowRadius: 10,
           elevation: 10,
-          ...Platform.select({
-            android: { elevation: 0 },
-          }),
         },
 
-        // ✅ Ensures each tab icon is centered in its slot
+        // ✅ Ensures icon is perfectly centered vertically
         tabBarItemStyle: {
+          height: 70, // Match tabBar height
           justifyContent: 'center',
           alignItems: 'center',
         },

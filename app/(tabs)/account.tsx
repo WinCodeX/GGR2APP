@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Text,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 import { Avatar, List, useTheme, Button } from 'react-native-paper';
@@ -13,8 +14,9 @@ import { useRouter } from 'expo-router';
 import api from '../../lib/api';
 
 export default function AccountScreen() {
-  const [userName, setUserName] = useState<string>(''); // NEW
+  const [userName, setUserName] = useState<string | null>(null);
   const [avatarUri, setAvatarUri] = useState<string | undefined>(undefined);
+  const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
   const theme = useTheme();
 
@@ -25,10 +27,12 @@ export default function AccountScreen() {
         const res = await api.get('/me', {
           headers: { Authorization: `Bearer ${token}` },
         });
-        setUserName(res.data.name);
+        setUserName(res.data.name || 'Unknown User');
         setAvatarUri(res.data.avatar_url);
-      } catch {
+      } catch (error) {
         Alert.alert('Error', 'Unable to load profile.');
+      } finally {
+        setLoading(false);
       }
     })();
   }, []);
@@ -52,7 +56,11 @@ export default function AccountScreen() {
         </TouchableOpacity>
         <View style={styles.userInfo}>
           <Text style={styles.level}>LVL0</Text>
-          <Text style={styles.username}>{userName}</Text>
+          {loading ? (
+            <ActivityIndicator color="#f8f8f2" size="small" />
+          ) : (
+            <Text style={styles.username}>{userName}</Text>
+          )}
         </View>
         <Button
           mode="contained"

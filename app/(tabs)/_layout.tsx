@@ -1,7 +1,7 @@
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
-import { Platform, StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 
 export default function TabLayout() {
   return (
@@ -9,10 +9,10 @@ export default function TabLayout() {
       screenOptions={{
         tabBarShowLabel: false,
         headerShown: false,
-        tabBarActiveTintColor: '#bd93f9',       // Dracula purple (active)
-        tabBarInactiveTintColor: '#6272a4',     // Dracula blue (inactive)
+        tabBarActiveTintColor: '#bd93f9',
+        tabBarInactiveTintColor: '#6272a4',
 
-        // ✅ Tab bar container styling
+        // ✅ Centered, styled tab bar
         tabBarStyle: {
           position: 'absolute',
           bottom: 20,
@@ -22,7 +22,8 @@ export default function TabLayout() {
           backgroundColor: '#1e1e2f',
           borderRadius: 40,
           borderTopWidth: 0,
-
+          paddingTop: 0,
+          paddingBottom: 0,
           shadowColor: '#000',
           shadowOffset: { width: 0, height: 6 },
           shadowOpacity: 0.3,
@@ -30,9 +31,9 @@ export default function TabLayout() {
           elevation: 10,
         },
 
-        // ✅ Ensures icon is perfectly centered vertically
+        // ✅ This ensures icons are perfectly centered inside
         tabBarItemStyle: {
-          height: 70, // Match tabBar height
+          flex: 1,
           justifyContent: 'center',
           alignItems: 'center',
         },

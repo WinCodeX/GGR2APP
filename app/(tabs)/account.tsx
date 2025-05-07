@@ -1,163 +1,153 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Text, TouchableOpacity, Alert } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Alert,
+  ScrollView,
+  Image,
+  TouchableOpacity,
+} from 'react-native';
 import * as SecureStore from 'expo-secure-store';
-import { TextInput, Button, useTheme } from 'react-native-paper';
+import { List, Avatar, useTheme } from 'react-native-paper';
 import { useRouter } from 'expo-router';
 import api from '../../lib/api';
 
 export default function AccountScreen() {
-  const [userName, setUserName] = useState('');
-  const [editingName, setEditingName] = useState(false);
-  const [newName, setNewName] = useState('');
-  const [updating, setUpdating] = useState(false);
+  const [userName, setUserName] = useState('Your Name');
+  const [avatarUri, setAvatarUri] = useState<string | undefined>(undefined);
   const router = useRouter();
   const theme = useTheme();
 
   useEffect(() => {
-    async function fetchUser() {
+    (async () => {
       try {
         const token = await SecureStore.getItemAsync('auth_token');
         const res = await api.get('/me', {
-          // ✔️ Wrapped in backticks so `${token}` is interpolated correctly
           headers: { Authorization: `Bearer ${token}` },
         });
         setUserName(res.data.name);
-        setNewName(res.data.name);
-      } catch (err: any) {
-        console.error('Fetch user error:', err);
+        setAvatarUri(res.data.avatar_url);
+      } catch {
         Alert.alert('Error', 'Unable to load profile.');
       }
-    }
-    fetchUser();
+    })();
   }, []);
 
-  const handleUpdateName = async () => {
-    setUpdating(true);
-    try {
-      const token = await SecureStore.getItemAsync('auth_token');
-      const res = await api.put(
-        '/me',
-        { name: newName },
-        {
-          headers: {
-            // ✔️ Same backtick fix here
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      setUserName(res.data.name);
-      setEditingName(false);
-    } catch (err: any) {
-      console.error('Update name error:', err);
-      Alert.alert('Error', 'Unable to update name.');
-    }
-    setUpdating(false);
-  };
-
-  const handleLogout = async () => {
-    await SecureStore.deleteItemAsync('auth_token');
-    router.replace('/login');
+  const handleNavigate = (path: string) => () => {
+    router.push(path);
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>Account</Text>
-
-      {!editingName ? (
-        <>
-          <Text style={styles.name}>{userName}</Text>
-          <TouchableOpacity onPress={() => setEditingName(true)}>
-            <Text style={styles.edit}>Edit Name</Text>
-          </TouchableOpacity>
-        </>
-      ) : (
-        <>
-          <TextInput
-            value={newName}
-            onChangeText={setNewName}
-            mode="outlined"
-            style={styles.input}
-            outlineColor="#44475a"
-            activeOutlineColor="#bd93f9"
+    <ScrollView style={styles.container}>
+      <View style={styles.profileSection}>
+        <TouchableOpacity onPress={handleNavigate('/avatar')}>
+          <Avatar.Image
+            size={80}
+            source={
+              avatarUri
+                ? { uri: avatarUri }
+                : require('../../assets/avatar-placeholder.png')
+            }
           />
-          <Button
-            mode="contained"
-            onPress={handleUpdateName}
-            loading={updating}
-            style={styles.saveButton}
-            labelStyle={{ color: '#fff', fontWeight: 'bold' }}
-          >
-            Save
-          </Button>
-        </>
-      )}
-
-      <View style={styles.actions}>
-        <Button
-          mode="outlined"
-          onPress={() => router.push('/edit-profile')}
-          style={styles.actionButton}
-          labelStyle={{ color: theme.colors.primary }}
-        >
-          Edit Profile Details
-        </Button>
-        <Button
-          mode="contained"
-          onPress={handleLogout}
-          style={styles.logoutButton}
-          labelStyle={{ color: '#fff' }}
-        >
-          Log Out
-        </Button>
+        </TouchableOpacity>
+        <List.Section style={styles.nameSection}>
+          <List.Item
+            title={userName}
+            description="Tap to view profile"
+            onPress={handleNavigate('/profile')}
+            titleStyle={styles.profileName}
+            descriptionStyle={styles.profileSubtitle}
+          />
+        </List.Section>
       </View>
-    </View>
+
+      <View style={styles.divider} />
+
+      <List.Section>
+        <List.Item
+          title="Account"
+          description="Security notifications, change number"
+          left={(props) => <List.Icon {...props} icon="key-outline" />}
+          onPress={handleNavigate('/settings/account')}
+        />
+        <List.Item
+          title="Privacy"
+          description="Block contacts, disappearing messages"
+          left={(props) => <List.Icon {...props} icon="shield-outline" />}
+          onPress={handleNavigate('/settings/privacy')}
+        />
+        <List.Item
+          title="Avatar"
+          description="Create, edit, profile photo"
+          left={(props) => <List.Icon {...props} icon="face-profile" />}
+          onPress={handleNavigate('/settings/avatar')}
+        />
+        <List.Item
+          title="Lists"
+          description="Manage people and groups"
+          left={(props) => <List.Icon {...props} icon="playlist-edit" />}
+          onPress={handleNavigate('/settings/lists')}
+        />
+        <List.Item
+          title="Chats"
+          description="Theme, wallpapers, chat history"
+          left={(props) => <List.Icon {...props} icon="chat-outline" />}
+          onPress={handleNavigate('/settings/chats')}
+        />
+        <List.Item
+          title="Notifications"
+          description="Message, group & call tones"
+          left={(props) => <List.Icon {...props} icon="bell-outline" />}
+          onPress={handleNavigate('/settings/notifications')}
+        />
+        <List.Item
+          title="Storage and data"
+          description="Network usage, auto-download"
+          left={(props) => <List.Icon {...props} icon="database-outline" />}
+          onPress={handleNavigate('/settings/storage')}
+        />
+        <List.Item
+          title="App language"
+          description="English (device’s language)"
+          left={(props) => <List.Icon {...props} icon="translate" />}
+          onPress={handleNavigate('/settings/language')}
+        />
+        <List.Item
+          title="Help"
+          description="Help center, contact us, privacy policy"
+          left={(props) => <List.Icon {...props} icon="help-circle-outline" />}
+          onPress={handleNavigate('/settings/help')}
+        />
+      </List.Section>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#1a1b26',
+    backgroundColor: '#121212',
+  },
+  profileSection: {
+    flexDirection: 'row',
     alignItems: 'center',
-    paddingTop: 48,
-    paddingHorizontal: 24,
+    padding: 16,
+    backgroundColor: '#1f1f1f',
   },
-  header: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#bd93f9',
-    marginBottom: 24,
+  nameSection: {
+    flex: 1,
+    justifyContent: 'center',
   },
-  name: {
+  profileName: {
+    color: '#fff',
     fontSize: 20,
-    color: '#f8f8f2',
-    marginBottom: 12,
+    fontWeight: '600',
   },
-  edit: {
-    color: '#6272a4',
-    marginBottom: 24,
+  profileSubtitle: {
+    color: '#aaa',
   },
-  input: {
-    width: '100%',
-    backgroundColor: '#1e1e2f',
-    borderRadius: 8,
-    marginBottom: 16,
-  },
-  saveButton: {
-    backgroundColor: '#bd93f9',
-    width: '60%',
-    borderRadius: 10,
-    marginBottom: 24,
-  },
-  actions: {
-    marginTop: 32,
-    width: '100%',
-  },
-  actionButton: {
-    marginBottom: 12,
-    borderColor: '#bd93f9',
-  },
-  logoutButton: {
-    backgroundColor: '#ff5555',
+  divider: {
+    height: 1,
+    backgroundColor: '#333',
   },
 });

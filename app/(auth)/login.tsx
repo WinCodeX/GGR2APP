@@ -14,21 +14,22 @@ export default function LoginScreen() {
   const theme = useTheme();
 
   const handleLogin = async () => {
+    setErrorMsg(''); // Clear previous error
     try {
       const response = await api.post('/login', {
         user: { email, password },
       });
 
-      const token = response.data?.token;
+      const token = response?.data?.token;
       if (token) {
         await SecureStore.setItemAsync('auth_token', token);
         router.replace('/');
       } else {
-        throw new Error('Token not found');
+        setErrorMsg('Login failed: token missing');
       }
-    } catch (error) {
-      console.error('Login error:', error);
-      setErrorMsg('Invalid credentials');
+    } catch (error: any) {
+      console.error('Login error:', error?.response?.data || error.message);
+      setErrorMsg('Invalid email or password');
     }
   };
 
@@ -50,8 +51,8 @@ export default function LoginScreen() {
         style={styles.input}
         textColor="#f8f8f2"
         placeholderTextColor="#ccc"
-        outlineColor="#333"
-        activeOutlineColor={theme.colors.primary}
+        outlineColor="#44475a"
+        activeOutlineColor="#bd93f9"
       />
 
       <TextInput
@@ -63,8 +64,8 @@ export default function LoginScreen() {
         style={styles.input}
         textColor="#f8f8f2"
         placeholderTextColor="#ccc"
-        outlineColor="#333"
-        activeOutlineColor={theme.colors.primary}
+        outlineColor="#44475a"
+        activeOutlineColor="#bd93f9"
         right={
           <TextInput.Icon
             icon={showPassword ? 'eye-off' : 'eye'}
@@ -82,16 +83,16 @@ export default function LoginScreen() {
         mode="contained"
         onPress={handleLogin}
         style={styles.button}
+        labelStyle={{ fontWeight: 'bold', color: '#fff' }}
       >
         Log In
       </Button>
 
-
-
-
-
-
-      <Button onPress={navigateToSignup} textColor={theme.colors.primary}>
+      <Button
+        onPress={navigateToSignup}
+        textColor="#bd93f9"
+        style={{ marginTop: 12 }}
+      >
         Don't have an account? Sign up
       </Button>
     </View>
@@ -101,12 +102,12 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000',
+    backgroundColor: '#282a36',
     padding: 24,
     justifyContent: 'center',
   },
   title: {
-    color: '#fff',
+    color: '#f8f8f2',
     fontSize: 24,
     fontWeight: '600',
     marginBottom: 20,
@@ -114,18 +115,19 @@ const styles = StyleSheet.create({
   },
   input: {
     marginBottom: 16,
-    backgroundColor: '#111',
+    backgroundColor: '#1e1e2f',
     borderRadius: 8,
   },
   button: {
-    backgroundColor: '#a78bfa',
+    backgroundColor: '#bd93f9',
     marginTop: 8,
     paddingVertical: 10,
-    borderRadius: 6,
+    borderRadius: 10,
   },
   error: {
-    color: 'red',
+    color: '#ff5555',
     textAlign: 'center',
     marginBottom: 8,
+    fontSize: 14,
   },
 });

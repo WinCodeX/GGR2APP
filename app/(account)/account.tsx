@@ -42,21 +42,20 @@ export default function AccountScreen() {
   }, [navigation]);
 
   // Load profile from API
-  const loadProfile = useCallback(() => {
-    (async () => {
-      try {
-        const token = await SecureStore.getItemAsync('auth_token');
-        const res = await api.get('/me', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setUserName(res.data.name || null);
-        setAvatarUri(res.data.avatar);  // correct key from backend
-      } catch {
-        Alert.alert('Error', 'Unable to load profile.');
-      } finally {
-        setLoading(false);
-      }
-    })();
+  const loadProfile = useCallback(async () => {
+    try {
+      const token = await SecureStore.getItemAsync('auth_token');
+      const res = await api.get('/me', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      // ✅ now reading `username` + `avatar` to match your JSON
+      setUserName(res.data.username || null);
+      setAvatarUri(res.data.avatar);
+    } catch {
+      Alert.alert('Error', 'Unable to load profile.');
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   useEffect(() => {
@@ -83,13 +82,12 @@ export default function AccountScreen() {
       quality: 0.7,
       allowsEditing: true,
     });
-    if (result.canceled || !result.assets?.length) return;
+    if (result.cancelled) return;
 
-    const pickedUri = result.assets[0].uri;
     const token = await SecureStore.getItemAsync('auth_token');
     const form = new FormData();
     form.append('avatar', {
-      uri: pickedUri,
+      uri: result.uri,
       name: 'avatar.jpg',
       type: 'image/jpeg',
     } as any);
@@ -102,7 +100,7 @@ export default function AccountScreen() {
         },
       });
       Toast.show({ type: 'successToast', text1: 'Avatar updated!' });
-      loadProfile(); // refresh
+      loadProfile();
     } catch {
       Toast.show({ type: 'errorToast', text1: 'Upload failed.' });
     }
@@ -370,7 +368,7 @@ const styles = StyleSheet.create({
     marginBottom: 6,
     paddingHorizontal: 18,
   },
-  item: { paddingVertical: 12,	paddingHorizontal: 12 },
+  item: { paddingVertical: 12, paddingHorizontal: 12 },
   itemContent: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   itemText: { color: '#f8f8f2', fontSize: 15 },
   itemArrow: { color: '#888', fontSize: 18 },

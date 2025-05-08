@@ -19,15 +19,18 @@ useEffect(() => { loadProfile(); }, [loadProfile]);
 
 
   mediaTypes: ['photo'],
-  quality: 0.7,
+const result = await ImagePicker.launchImageLibraryAsync({
+  mediaTypes: ImagePicker.MediaTypeOptions.Images,
+
   allowsEditing: true,
-if (result.canceled) return;  
-if (result.cancelled) return;
+});
+
+if (result.canceled || !result.assets?.length) return;
 
 const token = await SecureStore.getItemAsync('auth_token');
 const form = new FormData();
-  uri: result.assets?.[0]?.uri,
-  uri: result.uri,
+form.append('avatar', {
+  uri: result.assets[0].uri,
   name: 'avatar.jpg',
   type: 'image/jpeg',
 } as any);

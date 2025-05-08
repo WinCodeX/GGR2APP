@@ -84,5 +84,35 @@ return ( <View style={styles.container}> <Text style={styles.title}>GGR2App Logi
 
 ); }
 
-const styles = StyleSheet.create({ container: { flex: 1, backgroundColor: '#282a36', padding: 24, justifyContent: 'center', }, title: { color: '#f8f8f2', fontSize: 24, fontWeight: '600', marginBottom: 20, textAlign: 'center', }, input: { marginBottom: 16, backgroundColor: '#1e1e2f', borderRadius: 8, }, button: { backgroundColor: '#bd93f9', marginTop: 8, paddingVertical: 10, borderRadius: 10, }, error: { color: '#ff5555', textAlign: 'center', marginBottom: 8, fontSize: 14, }, });
-
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#282a36',
+    padding: 24,
+    justifyContent: 'center',
+  },
+  title: {
+    color: '#f8f8f2',
+    fontSize: 24,
+    fontWeight: '600',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  input: {
+    marginBottom: 16,
+    backgroundColor: '#1e1e2f',
+    borderRadius: 8,
+  },
+  button: {
+    backgroundColor: '#bd93f9',
+    marginTop: 8,
+    paddingVertical: 10,
+    borderRadius: 10,
+  },
+  error: {
+    color: '#ff5555',
+    textAlign: 'center',
+    marginBottom: 8,
+    fontSize: 14,
+  },
+});

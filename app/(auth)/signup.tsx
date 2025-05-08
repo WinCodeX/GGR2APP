@@ -114,5 +114,32 @@ return ( <View style={styles.container}> <Text style={styles.title}>Create Accou
 
 ); }
 
-const styles = StyleSheet.create({ container: { flex: 1, backgroundColor: '#000', padding: 24, justifyContent: 'center', }, title: { fontSize: 24, color: '#aaa', marginBottom: 20, textAlign: 'center', }, input: { backgroundColor: '#111', marginBottom: 16, color: '#aaa', }, button: { backgroundColor: '#a78bfa', marginTop: 8, padding: 8, }, error: { color: 'red', textAlign: 'center', marginBottom: 8, }, });
-
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#000',
+    padding: 24,
+    justifyContent: 'center',
+  },
+  title: {
+    fontSize: 24,
+    color: '#aaa',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  input: {
+    backgroundColor: '#111',
+    marginBottom: 16,
+    color: '#aaa',
+  },
+  button: {
+    backgroundColor: '#a78bfa',
+    marginTop: 8,
+    padding: 8,
+  },
+  error: {
+    color: 'red',
+    textAlign: 'center',
+    marginBottom: 8,
+  },
+});

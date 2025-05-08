@@ -18,12 +18,18 @@ export default function LoginScreen() {
   const handleLogin = async () => {
     setErrorMsg('');
     try {
-      const response = await api.post('/login', { email, password });
-      const token = response?.data?.token;
+      // wrap credentials in a `user` object
+      const response = await api.post('/login', {
+        user: { email, password },
+      });
 
+      const token = response?.data?.token;
       if (token) {
         await SecureStore.setItemAsync('auth_token', token);
-        Toast.show({ type: 'defaultToast', text1: 'Welcome back!' });
+        Toast.show({
+          type: 'defaultToast',
+          text1: 'Welcome back!',
+        });
         router.replace('/');
       } else {
         setErrorMsg('Login failed: token missing');
@@ -66,7 +72,7 @@ export default function LoginScreen() {
         right={
           <TextInput.Icon
             icon={showPassword ? 'eye-off' : 'eye'}
-            onPress={() => setShowPassword((v) => !v)}
+            onPress={() => setShowPassword(v => !v)}
             forceTextInputFocus={false}
             color="#aaa"
           />

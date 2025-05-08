@@ -1,6 +1,14 @@
 import { View, Text, StyleSheet } from 'react-native';
 
 export const toastConfig = {
+
+// ← new “default” style
+  defaultToast: ({ text1 }: any) => (
+    <View style={[styles.toast, { backgroundColor: '#6272a4' }]}>
+      <Text style={styles.toastText}>{text1}</Text>
+    </View>
+  ),
+
   successToast: ({ text1 }: any) => (
     <View style={[styles.toast, { backgroundColor: '#50fa7b' }]}>
       <Text style={styles.toastText}>{text1}</Text>

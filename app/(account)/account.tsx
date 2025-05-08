@@ -43,11 +43,19 @@ navigation.getParent()?.setOptions({ tabBarStyle: { display: 'flex' } });
 
 // Load profile from API
 const loadProfile = useCallback(async () => {
-try {
-const token = await SecureStore.getItemAsync('auth_token');
-const res = await api.get('/me', {
-headers: { Authorization: Bearer ${token}'},
-});
+  try {
+    const token = await SecureStore.getItemAsync('auth_token');
+    const res = await api.get('/me', {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    setUserName(res.data.username || null);
+    setAvatarUri(res.data.avatar);
+  } catch {
+    Alert.alert('Error', 'Unable to load profile.');
+  } finally {
+    setLoading(false);
+  }
+}, []);
 // ✅ now reading username + avatar to match your JSON
 setUserName(res.data.username || null);
 setAvatarUri(res.data.avatar);

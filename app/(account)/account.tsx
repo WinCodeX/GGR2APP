@@ -49,7 +49,7 @@ export default function AccountScreen() {
         headers: { Authorization: `Bearer ${token}` },
       });
       setUserName(res.data.name || null);
-      setAvatarUri(res.data.avatar_url);
+      setAvatarUri(res.data.avatar);
     } catch {
       Alert.alert('Error', 'Unable to load profile.');
     } finally {

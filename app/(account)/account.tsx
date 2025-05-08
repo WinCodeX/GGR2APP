@@ -1,6 +1,6 @@
-import { useNavigation } from '@react-navigation/native'; import { useRouter } from 'expo-router'; import * as SecureStore from 'expo-secure-store'; import React, { useEffect, useLayoutEffect, useState } from 'react'; import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'; import { Avatar, Button } from 'react-native-paper'; import { MaterialCommunityIcons } from '@expo/vector-icons'; import api from '../../lib/api';
+import { useNavigation } from '@react-navigation/native'; import { useRouter } from 'expo-router'; import * as SecureStore from 'expo-secure-store'; import React, { useEffect, useLayoutEffect, useState } from 'react'; import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'; import { Avatar, Button, Dialog, Portal } from 'react-native-paper'; import { MaterialCommunityIcons } from '@expo/vector-icons'; import api from '../../lib/api';
 
-export default function AccountScreen() { const [userName, setUserName] = useState<string | null>(null); const [avatarUri, setAvatarUri] = useState<string | undefined>(undefined); const router = useRouter(); const navigation = useNavigation();
+export default function AccountScreen() { const [userName, setUserName] = useState<string | null>(null); const [avatarUri, setAvatarUri] = useState<string | undefined>(undefined); const [showLogoutConfirm, setShowLogoutConfirm] = useState(false); const router = useRouter(); const navigation = useNavigation();
 
 useLayoutEffect(() => { navigation.getParent()?.setOptions({ tabBarStyle: { display: 'none' } }); return () => { navigation.getParent()?.setOptions({ tabBarStyle: { display: 'flex' } }); }; }, [navigation]);
 
@@ -82,130 +82,51 @@ return ( <ScrollView style={styles.container}> <View style={styles.identityCard}
   </Section>
 
   <View style={styles.logoutCard}>
-    <TouchableOpacity style={styles.logoutButton} onPress={() => Alert.alert('Log out', 'Implement logout logic')}>
+    <TouchableOpacity
+      style={styles.logoutButton}
+      onPress={() => setShowLogoutConfirm(true)}
+    >
       <MaterialCommunityIcons name="logout" size={22} color="#ff6b6b" style={styles.logoutIcon} />
       <Text style={styles.logoutText}>Log Out</Text>
     </TouchableOpacity>
   </View>
+
+  <Portal>
+    <Dialog
+      visible={showLogoutConfirm}
+      onDismiss={() => setShowLogoutConfirm(false)}
+      style={styles.dialog}
+    >
+      <Dialog.Title style={styles.dialogTitle}>Confirm Logout</Dialog.Title>
+      <Dialog.Content>
+        <Text style={styles.dialogText}>Are you sure you want to log out?</Text>
+      </Dialog.Content>
+      <Dialog.Actions style={styles.dialogActions}>
+        <Button
+          onPress={() => setShowLogoutConfirm(false)}
+          style={styles.dialogCancel}
+          labelStyle={styles.cancelLabel}
+        >
+          No
+        </Button>
+        <Button
+          mode="outlined"
+          onPress={async () => {
+            await SecureStore.deleteItemAsync('auth_token');
+            setShowLogoutConfirm(false);
+            router.replace('/login');
+          }}
+          style={styles.dialogConfirm}
+          labelStyle={styles.confirmLabel}
+        >
+          Yes
+        </Button>
+      </Dialog.Actions>
+    </Dialog>
+  </Portal>
 </ScrollView>
 
 ); }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#1e1e2e',
-  },
-  identityCard: {
-    backgroundColor: '#282a36',
-    margin: 16,
-    borderRadius: 12,
-    padding: 16,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  identityLeft: {
-    flexDirection: 'column',
-  },
-  userName: {
-    color: '#ffffff',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  accountType: {
-    color: '#888888',
-    fontSize: 14,
-    marginTop: 4,
-  },
-  premiumBox: {
-    backgroundColor: '#2e2e3e',
-    margin: 16,
-    borderRadius: 12,
-    padding: 16,
-    borderColor: '#bd93f9',
-    borderWidth: 1,
-  },
-  premiumText: {
-    color: '#ff79c6',
-    fontWeight: 'bold',
-    marginBottom: 12,
-    fontSize: 16,
-  },
-  premiumButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-  },
-  premiumButton: {
-    borderColor: '#6272a4',
-    borderWidth: 1,
-    borderRadius: 16,
-    paddingHorizontal: 16,
-  },
-  searchBox: {
-    backgroundColor: '#2e2e3e',
-    marginHorizontal: 16,
-    marginTop: 8,
-    marginBottom: 12,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    borderRadius: 12,
-  },
-  searchPlaceholder: {
-    color: '#888',
-    fontSize: 15,
-    fontStyle: 'italic',
-  },
-  sectionCard: {
-    backgroundColor: '#282a36',
-    marginHorizontal: 12,
-    borderRadius: 12,
-    padding: 4,
-  },
-  sectionTitle: {
-    color: '#f8f8f2',
-    fontWeight: 'bold',
-    fontSize: 14,
-    marginTop: 24,
-    marginBottom: 6,
-    paddingHorizontal: 18,
-  },
-  item: {
-    paddingVertical: 12,
-    paddingHorizontal: 12,
-  },
-  itemContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  itemIcon: {
-    marginRight: 12,
-  },
-  itemText: {
-    color: '#f8f8f2',
-    fontSize: 15,
-    flex: 1,
-  },
-  itemArrow: {
-    color: '#888',
-    fontSize: 18,
-  },
-  logoutCard: {
-    backgroundColor: '#282a36',
-    margin: 16,
-    borderRadius: 12,
-    padding: 12,
-  },
-  logoutButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  logoutIcon: {
-    marginRight: 12,
-  },
-  logoutText: {
-    color: '#ff6b6b',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-});
+const styles = StyleSheet.create({ container: { flex: 1, backgroundColor: '#1e1e2e', }, identityCard: { backgroundColor: '#282a36', margin: 16, borderRadius: 12, padding: 16, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', }, identityLeft: { flexDirection: 'column', }, userName: { color: '#ffffff', fontSize: 18, fontWeight: 'bold', }, accountType: { color: '#888888', fontSize: 14, marginTop: 4, }, premiumBox: { backgroundColor: '#2e2e3e', margin: 16, borderRadius: 12, padding: 16, borderColor: '#bd93f9', borderWidth: 1, }, premiumText: { color: '#ff79c6', fontWeight: 'bold', marginBottom: 12, fontSize: 16, }, premiumButtons: { flexDirection: 'row', justifyContent: 'space-around', }, premiumButton: { borderColor: '#6272a4', borderWidth: 1, borderRadius: 16, paddingHorizontal: 16, }, searchBox: { backgroundColor: '#2e2e3e', marginHorizontal: 16, marginTop: 8, marginBottom: 12, paddingVertical: 12, paddingHorizontal: 16, borderRadius: 12, }, searchPlaceholder: { color: '#888', fontSize: 15, fontStyle: 'italic', }, sectionCard: { backgroundColor: '#282a36', marginHorizontal: 12, borderRadius: 12, padding: 4, }, sectionTitle: { color: '#f8f8f2', fontWeight: 'bold', fontSize: 14, marginTop: 24, marginBottom: 6, paddingHorizontal: 18, }, item: { paddingVertical: 12, paddingHorizontal: 12, }, itemContent: { flexDirection: 'row', alignItems: 'center', }, itemIcon: { marginRight: 12, }, itemText: { color: '#f8f8f2', fontSize: 15, flex: 1, }, itemArrow: { color: '#888', fontSize: 18, }, logoutCard: { backgroundColor: '#282a36', margin: 16, borderRadius: 12, padding: 12, }, logoutButton: { flexDirection: 'row', alignItems: 'center', }, logoutIcon: { marginRight: 12, }, logoutText: { color: '#ff6b6b', fontSize: 16, fontWeight: '600', }, dialog: { backgroundColor: '#282a36', borderRadius: 12, }, dialogTitle: { color: '#f8f8f2', fontWeight: 'bold', }, dialogText: { color: '#ccc', fontSize: 15, }, dialogActions: { justifyContent: 'space-between', paddingHorizontal: 12, }, dialogCancel: { backgroundColor: '#bd93f9', borderRadius: 6, marginRight: 8, }, cancelLabel: { color: '#fff', }, dialogConfirm: { borderColor: '#ff5555', borderWidth: 1, borderRadius: 6, }, confirmLabel: { color: '#ff5555', fontWeight: 'bold', }, });
+

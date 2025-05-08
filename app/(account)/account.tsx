@@ -91,5 +91,121 @@ return ( <ScrollView style={styles.container}> <View style={styles.identityCard}
 
 ); }
 
-const styles = StyleSheet.create({ container: { flex: 1, backgroundColor: '#1e1e2e', }, identityCard: { backgroundColor: '#282a36', margin: 16, borderRadius: 12, padding: 16, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', }, identityLeft: { flexDirection: 'column', }, userName: { color: '#ffffff', fontSize: 18, fontWeight: 'bold', }, accountType: { color: '#888888', fontSize: 14, marginTop: 4, }, premiumBox: { backgroundColor: '#2e2e3e', margin: 16, borderRadius: 12, padding: 16, borderColor: '#bd93f9', borderWidth: 1, }, premiumText: { color: '#ff79c6', fontWeight: 'bold', marginBottom: 12, fontSize: 16, }, premiumButtons: { flexDirection: 'row', justifyContent: 'space-around', }, premiumButton: { borderColor: '#6272a4', borderWidth: 1, borderRadius: 16, paddingHorizontal: 16, }, searchBox: { backgroundColor: '#2e2e3e', marginHorizontal: 16, marginTop: 8, marginBottom: 12, paddingVertical: 12, paddingHorizontal: 16, borderRadius: 12, }, searchPlaceholder: { color: '#888', fontSize: 15, fontStyle: 'italic', }, sectionCard: { backgroundColor: '#282a36', marginHorizontal: 12, borderRadius: 12, padding: 4, }, sectionTitle: { color: '#f8f8f2', fontWeight: 'bold', fontSize: 14, marginTop: 24, marginBottom: 6, paddingHorizontal: 18, }, item: { paddingVertical: 12, paddingHorizontal: 12, }, itemContent: { flexDirection: 'row', alignItems: 'center', }, itemIcon: { marginRight: 12, }, itemText: { color: '#f8f8f2', fontSize: 15, flex: 1, }, itemArrow: { color: '#888', fontSize: 18, }, logoutCard: { backgroundColor: '#282a36', margin: 16, borderRadius: 12, padding: 12, }, logoutButton: { flexDirection: 'row', alignItems: 'center', }, logoutIcon: { marginRight: 12, }, logoutText: { color: '#ff6b6b', fontSize: 16, fontWeight: '600', }, });
-
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#1e1e2e',
+  },
+  identityCard: {
+    backgroundColor: '#282a36',
+    margin: 16,
+    borderRadius: 12,
+    padding: 16,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  identityLeft: {
+    flexDirection: 'column',
+  },
+  userName: {
+    color: '#ffffff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  accountType: {
+    color: '#888888',
+    fontSize: 14,
+    marginTop: 4,
+  },
+  premiumBox: {
+    backgroundColor: '#2e2e3e',
+    margin: 16,
+    borderRadius: 12,
+    padding: 16,
+    borderColor: '#bd93f9',
+    borderWidth: 1,
+  },
+  premiumText: {
+    color: '#ff79c6',
+    fontWeight: 'bold',
+    marginBottom: 12,
+    fontSize: 16,
+  },
+  premiumButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+  },
+  premiumButton: {
+    borderColor: '#6272a4',
+    borderWidth: 1,
+    borderRadius: 16,
+    paddingHorizontal: 16,
+  },
+  searchBox: {
+    backgroundColor: '#2e2e3e',
+    marginHorizontal: 16,
+    marginTop: 8,
+    marginBottom: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 12,
+  },
+  searchPlaceholder: {
+    color: '#888',
+    fontSize: 15,
+    fontStyle: 'italic',
+  },
+  sectionCard: {
+    backgroundColor: '#282a36',
+    marginHorizontal: 12,
+    borderRadius: 12,
+    padding: 4,
+  },
+  sectionTitle: {
+    color: '#f8f8f2',
+    fontWeight: 'bold',
+    fontSize: 14,
+    marginTop: 24,
+    marginBottom: 6,
+    paddingHorizontal: 18,
+  },
+  item: {
+    paddingVertical: 12,
+    paddingHorizontal: 12,
+  },
+  itemContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  itemIcon: {
+    marginRight: 12,
+  },
+  itemText: {
+    color: '#f8f8f2',
+    fontSize: 15,
+    flex: 1,
+  },
+  itemArrow: {
+    color: '#888',
+    fontSize: 18,
+  },
+  logoutCard: {
+    backgroundColor: '#282a36',
+    margin: 16,
+    borderRadius: 12,
+    padding: 12,
+  },
+  logoutButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  logoutIcon: {
+    marginRight: 12,
+  },
+  logoutText: {
+    color: '#ff6b6b',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+});

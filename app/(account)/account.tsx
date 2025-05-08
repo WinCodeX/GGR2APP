@@ -26,7 +26,7 @@ export default function AccountScreen() {
   const router = useRouter();
   const navigation = useNavigation();
 
-  // hide tabs
+  // Hide the bottom tab bar
   useLayoutEffect(() => {
     navigation.getParent()?.setOptions({ tabBarStyle: { display: 'none' } });
     return () => {
@@ -34,18 +34,18 @@ export default function AccountScreen() {
     };
   }, [navigation]);
 
-  // fetch & cache profile
+  // Profile loader
   const loadProfile = useCallback(async () => {
     try {
       const token = await SecureStore.getItemAsync('auth_token');
       const res = await api.get('/me', {
         headers: { Authorization: `Bearer ${token}` },
       });
+
       setUserName(res.data.username || res.data.name || 'No name');
 
-      const remote = res.data.avatar_url;
-      if (remote) {
-        const local = await getCachedAvatarUri(remote);
+      if (res.data.avatar_url) {
+        const local = await getCachedAvatarUri(res.data.avatar_url);
         setAvatarUri(local);
       }
     } catch {
@@ -55,13 +55,17 @@ export default function AccountScreen() {
     }
   }, []);
 
-  // initial load
+  // Initial fetch
   useEffect(() => {
     loadProfile();
   }, [loadProfile]);
 
-  // reload after navigating back from Avatar screen
-  useFocusEffect(loadProfile);
+  // Re-fetch on screen focus without returning a Promise
+  useFocusEffect(
+    useCallback(() => {
+      loadProfile();
+    }, [loadProfile])
+  );
 
   const handleNavigate = (path: string) => () => {
     router.push(path);
@@ -102,35 +106,7 @@ export default function AccountScreen() {
         </TouchableOpacity>
       </View>
 
-      {/* Premium Box */}
-      <View style={styles.premiumBox}>
-        <Text style={styles.premiumText}>Amp up your profile</Text>
-        <View style={styles.premiumButtons}>
-          <Button
-            mode="outlined"
-            onPress={handleNavigate('/premium')}
-            style={styles.premiumButton}
-            labelStyle={{ color: '#ff79c6' }}
-          >
-            Premium
-          </Button>
-          <Button
-            mode="outlined"
-            onPress={handleNavigate('/shop')}
-            style={styles.premiumButton}
-            labelStyle={{ color: '#ffb86c' }}
-          >
-            Shop
-          </Button>
-        </View>
-      </View>
-
-      {/* Search Bar */}
-      <View style={styles.searchBox}>
-        <Text style={styles.searchPlaceholder}>Search</Text>
-      </View>
-
-      {/* … rest of your sections … */}
+      {/* … rest of your UI … */}
 
       {/* Log Out */}
       <View style={styles.logoutCard}>
@@ -155,9 +131,13 @@ export default function AccountScreen() {
           onDismiss={() => setShowLogoutConfirm(false)}
           style={styles.dialog}
         >
-          <Dialog.Title style={styles.dialogTitle}>Confirm Logout</Dialog.Title>
+          <Dialog.Title style={styles.dialogTitle}>
+            Confirm Logout
+          </Dialog.Title>
           <Dialog.Content>
-            <Text style={styles.dialogText}>Are you sure you want to log out?</Text>
+            <Text style={styles.dialogText}>
+              Are you sure you want to log out?
+            </Text>
           </Dialog.Content>
           <Dialog.Actions style={styles.dialogActions}>
             <Button
@@ -196,30 +176,6 @@ const styles = StyleSheet.create({
   },
   userName: { color: '#fff', fontSize: 18, fontWeight: 'bold' },
   accountType: { color: '#888', fontSize: 14, marginTop: 4 },
-  premiumBox: {
-    backgroundColor: '#2e2e3e',
-    margin: 16,
-    borderRadius: 12,
-    padding: 16,
-    borderColor: '#bd93f9',
-    borderWidth: 1,
-  },
-  premiumText: { color: '#ff79c6', fontWeight: 'bold', fontSize: 16 },
-  premiumButtons: { flexDirection: 'row', justifyContent: 'space-around' },
-  premiumButton: {
-    borderColor: '#6272a4',
-    borderWidth: 1,
-    borderRadius: 16,
-    paddingHorizontal: 16,
-  },
-  searchBox: {
-    backgroundColor: '#2e2e3e',
-    marginHorizontal: 16,
-    marginVertical: 12,
-    padding: 12,
-    borderRadius: 12,
-  },
-  searchPlaceholder: { color: '#888', fontStyle: 'italic' },
   logoutCard: {
     backgroundColor: '#282a36',
     margin: 16,

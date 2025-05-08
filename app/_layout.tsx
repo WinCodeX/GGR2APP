@@ -2,6 +2,8 @@ import { Slot, useRouter, useSegments } from 'expo-router';
 import * as SecureStore from 'expo-secure-store';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, View } from 'react-native';
+import Toast from 'react-native-toast-message';
+import { toastConfig } from '../lib/toastConfig'; // adjust if directory differs
 
 export default function RootLayout() {
   const [isAuthChecked, setAuthChecked] = useState(false);

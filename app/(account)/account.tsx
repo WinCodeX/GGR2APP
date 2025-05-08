@@ -46,7 +46,7 @@ const loadProfile = useCallback(async () => {
 try {
 const token = await SecureStore.getItemAsync('auth_token');
 const res = await api.get('/me', {
-headers: { Authorization: Bearer ${token} },
+headers: { Authorization: Bearer ${token}'},
 });
 // ✅ now reading username + avatar to match your JSON
 setUserName(res.data.username || null);

@@ -4,7 +4,7 @@ export default function AccountScreen() { const [userName, setUserName] = useSta
 
 useLayoutEffect(() => { navigation.getParent()?.setOptions({ tabBarStyle: { display: 'none' }, }); return () => { navigation.getParent()?.setOptions({ tabBarStyle: { display: 'flex' }, }); }; }, [navigation]);
 
-useEffect(() => { (async () => { try { const token = await SecureStore.getItemAsync('auth_token'); const res = await api.get('/me', { headers: { Authorization: Bearer ${token} }, }); setUserName(res.data.name || null); setAvatarUri(res.data.avatar_url); } catch { Alert.alert('Error', 'Unable to load profile.'); } })(); }, []);
+useEffect(() => { (async () => { try { const token = await SecureStore.getItemAsync('auth_token'); const res = await api.get('/me', { headers: { Authorization: Bearer ${token}' }, }); setUserName(res.data.name || null); setAvatarUri(res.data.avatar_url); } catch { Alert.alert('Error', 'Unable to load profile.'); } })(); }, []);
 
 const handleNavigate = (path: string) => () => { router.push(path); };
 

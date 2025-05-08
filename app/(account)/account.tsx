@@ -1,7 +1,14 @@
+// app/(account)/account.tsx
+
 import { useNavigation } from '@react-navigation/native';
-import { useRouter, useFocusEffect } from 'expo-router';
+import { useRouter, useFocusEffect } from 'expo-router';       // ← added useFocusEffect
 import * as SecureStore from 'expo-secure-store';
-import React, { useCallback, useEffect, useLayoutEffect, useState } from 'react';
+import React, {
+  useCallback,                                             // ← added
+  useEffect,
+  useLayoutEffect,
+  useState,
+} from 'react';
 import {
   Alert,
   ScrollView,
@@ -9,24 +16,24 @@ import {
   Text,
   TouchableOpacity,
   View,
-  ActivityIndicator,
+  ActivityIndicator,                                      // ← loader
 } from 'react-native';
 import { Avatar, Button, Dialog, Portal } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Toast from 'react-native-toast-message';
 import api from '../../lib/api';
-import { getCachedAvatarUri } from '../../lib/avatarCache';
+import { getCachedAvatarUri } from '../../lib/avatarCache';  // ← caching helper
 
 export default function AccountScreen() {
   const [userName, setUserName] = useState<string | null>(null);
   const [avatarUri, setAvatarUri] = useState<string>();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(true);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   const router = useRouter();
   const navigation = useNavigation();
 
-  // Hide the bottom tab bar
+  // Hide the bottom tab bar on this screen
   useLayoutEffect(() => {
     navigation.getParent()?.setOptions({ tabBarStyle: { display: 'none' } });
     return () => {
@@ -34,7 +41,7 @@ export default function AccountScreen() {
     };
   }, [navigation]);
 
-  // Profile loader
+  // --- EXTRACTED PROFILE LOADER ---
   const loadProfile = useCallback(async () => {
     try {
       const token = await SecureStore.getItemAsync('auth_token');
@@ -42,11 +49,11 @@ export default function AccountScreen() {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      setUserName(res.data.username || res.data.name || 'No name');
+      setUserName(res.data.name || null);
 
       if (res.data.avatar_url) {
-        const local = await getCachedAvatarUri(res.data.avatar_url);
-        setAvatarUri(local);
+        const localUri = await getCachedAvatarUri(res.data.avatar_url);
+        setAvatarUri(localUri);
       }
     } catch {
       Alert.alert('Error', 'Unable to load profile.');
@@ -60,12 +67,13 @@ export default function AccountScreen() {
     loadProfile();
   }, [loadProfile]);
 
-  // Re-fetch on screen focus without returning a Promise
+  // Re-fetch whenever screen regains focus (no Promise returned)
   useFocusEffect(
     useCallback(() => {
       loadProfile();
     }, [loadProfile])
   );
+  // ----------------------------------
 
   const handleNavigate = (path: string) => () => {
     router.push(path);
@@ -74,10 +82,14 @@ export default function AccountScreen() {
   const confirmLogout = async () => {
     await SecureStore.deleteItemAsync('auth_token');
     setShowLogoutConfirm(false);
-    Toast.show({ type: 'warningToast', text1: 'Logged out successfully' });
+    Toast.show({
+      type: 'warningToast',
+      text1: 'Logged out successfully',
+    });
     router.replace('/login');
   };
 
+  // Show loader while fetching
   if (loading) {
     return (
       <View style={styles.loader}>
@@ -90,8 +102,10 @@ export default function AccountScreen() {
     <ScrollView style={styles.container}>
       {/* Profile Header */}
       <View style={styles.identityCard}>
-        <View>
-          <Text style={styles.userName}>{userName}</Text>
+        <View style={styles.identityLeft}>
+          <Text style={styles.userName}>
+            {userName || 'No name'}
+          </Text>
           <Text style={styles.accountType}>Client account</Text>
         </View>
         <TouchableOpacity onPress={handleNavigate('/avatar')}>
@@ -106,9 +120,41 @@ export default function AccountScreen() {
         </TouchableOpacity>
       </View>
 
-      {/* … rest of your UI … */}
+      {/* Premium Box */}
+      <View style={styles.premiumBox}>
+        <Text style={styles.premiumText}>Amp up your profile</Text>
+        <View style={styles.premiumButtons}>
+          <Button
+            mode="outlined"
+            onPress={handleNavigate('/premium')}
+            style={styles.premiumButton}
+            labelStyle={{ color: '#ff79c6' }}
+          >
+            Premium
+          </Button>
+          <Button
+            mode="outlined"
+            onPress={handleNavigate('/shop')}
+            style={styles.premiumButton}
+            labelStyle={{ color: '#ffb86c' }}
+          >
+            Shop
+          </Button>
+        </View>
+      </View>
 
-      {/* Log Out */}
+      {/* Search Bar */}
+      <View style={styles.searchBox}>
+        <Text style={styles.searchPlaceholder}>Search</Text>
+      </View>
+
+      {/* Settings Sections */}
+      <Section title="Account Settings">
+        <SettingItem label="Account" onPress={handleNavigate('/settings/account')} />
+        {/* … etc … */}
+      </Section>
+
+      {/* Log Out Button Card */}
       <View style={styles.logoutCard}>
         <TouchableOpacity
           style={styles.logoutButton}
@@ -124,7 +170,7 @@ export default function AccountScreen() {
         </TouchableOpacity>
       </View>
 
-      {/* Logout Confirmation */}
+      {/* Confirmation Dialog */}
       <Portal>
         <Dialog
           visible={showLogoutConfirm}
@@ -162,8 +208,13 @@ export default function AccountScreen() {
   );
 }
 
+// … your existing styles …
 const styles = StyleSheet.create({
-  loader: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  loader: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   container: { flex: 1, backgroundColor: '#1e1e2e' },
   identityCard: {
     backgroundColor: '#282a36',
@@ -174,8 +225,43 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  userName: { color: '#fff', fontSize: 18, fontWeight: 'bold' },
-  accountType: { color: '#888', fontSize: 14, marginTop: 4 },
+  identityLeft: { flexDirection: 'column' },
+  userName: { color: '#ffffff', fontSize: 18, fontWeight: 'bold' },
+  accountType: { color: '#888888', fontSize: 14, marginTop: 4 },
+  premiumBox: {
+    backgroundColor: '#2e2e3e',
+    margin: 16,
+    borderRadius: 12,
+    padding: 16,
+    borderColor: '#bd93f9',
+    borderWidth: 1,
+  },
+  premiumText: { color: '#ff79c6', fontWeight: 'bold', marginBottom: 12, fontSize: 16 },
+  premiumButtons: { flexDirection: 'row', justifyContent: 'space-around' },
+  premiumButton: { borderColor: '#6272a4', borderWidth: 1, borderRadius: 16, paddingHorizontal: 16 },
+  searchBox: {
+    backgroundColor: '#2e2e3e',
+    marginHorizontal: 16,
+    marginTop: 8,
+    marginBottom: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 12,
+  },
+  searchPlaceholder: { color: '#888', fontSize: 15, fontStyle: 'italic' },
+  sectionCard: { backgroundColor: '#282a36', marginHorizontal: 12, borderRadius: 12, padding: 4 },
+  sectionTitle: {
+    color: '#f8f8f2',
+    fontWeight: 'bold',
+    fontSize: 14,
+    marginTop: 24,
+    marginBottom: 6,
+    paddingHorizontal: 18,
+  },
+  item: { paddingVertical: 12, paddingHorizontal: 12 },
+  itemContent: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  itemText: { color: '#f8f8f2', fontSize: 15 },
+  itemArrow: { color: '#888', fontSize: 18 },
   logoutCard: {
     backgroundColor: '#282a36',
     margin: 16,
@@ -193,5 +279,4 @@ const styles = StyleSheet.create({
   cancelLabel: { color: '#fff' },
   dialogConfirm: { borderColor: '#ff5555', borderWidth: 1, borderRadius: 6 },
   confirmLabel: { color: '#ff5555', fontWeight: 'bold' },
-  // …other styles…
 });

@@ -1,24 +1,57 @@
-import { Slot, useRouter, useSegments } from 'expo-router'; import * as SecureStore from 'expo-secure-store'; import { useEffect, useState } from 'react'; import { ActivityIndicator, View } from 'react-native'; import Toast from 'react-native-toast-message'; import { toastConfig } from '../lib/toastConfig';
+// app/_layout.tsx
 
-export default function RootLayout() { const [isAuthChecked, setAuthChecked] = useState(false); const [isLoggedIn, setIsLoggedIn] = useState(false); const segments = useSegments(); const router = useRouter();
+import React, { useEffect, useState } from 'react';
+import { Slot, useRouter, useSegments } from 'expo-router';
+import * as SecureStore from 'expo-secure-store';
+import { ActivityIndicator, View, StyleSheet } from 'react-native';
+import Toast from 'react-native-toast-message';
+import { Provider as PaperProvider } from 'react-native-paper';
+import { toastConfig } from '../lib/toastConfig';
 
-useEffect(() => { const checkSession = async () => { const token = await SecureStore.getItemAsync('auth_token'); const isAuth = !!token; setIsLoggedIn(isAuth); setAuthChecked(true);
+export default function RootLayout() {
+  const [isAuthChecked, setAuthChecked] = useState(false);
+  const segments = useSegments();
+  const router = useRouter();
 
-const inAuthGroup = segments[0] === '(auth)';
-  const inTabGroup = segments[0] === '(tabs)';
+  useEffect(() => {
+    const checkSession = async () => {
+      const token = await SecureStore.getItemAsync('auth_token');
+      const isAuth = !!token;
+      setAuthChecked(true);
 
-  if (!isAuth && inTabGroup) {
-    router.replace('/login');
-  } else if (isAuth && inAuthGroup) {
-    router.replace('/');
+      const inAuthGroup = segments[0] === '(auth)';
+      const inTabGroup = segments[0] === '(tabs)';
+
+      if (!isAuth && inTabGroup) {
+        router.replace('/login');
+      } else if (isAuth && inAuthGroup) {
+        router.replace('/');
+      }
+    };
+
+    checkSession();
+  }, [segments, router]);
+
+  if (!isAuthChecked) {
+    return (
+      <View style={styles.loader}>
+        <ActivityIndicator size="large" color="#a78bfa" />
+      </View>
+    );
   }
-};
 
-checkSession();
+  return (
+    <PaperProvider>
+      <Slot />
+      <Toast config={toastConfig} />
+    </PaperProvider>
+  );
+}
 
-}, [segments]);
-
-if (!isAuthChecked) { return ( <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}> <ActivityIndicator size="large" color="#a78bfa" /> </View> ); }
-
-return ( <> <Slot /> <Toast config={toastConfig} /> </> ); }
-
+const styles = StyleSheet.create({
+  loader: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});

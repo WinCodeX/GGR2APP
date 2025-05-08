@@ -299,19 +299,25 @@ export default function AccountScreen() {
           <Dialog.Content>
             <Text style={styles.dialogText}>Are you sure you want to log out?</Text>
           </Dialog.Content>
+
+          {/* ← Updated Actions */}
           <Dialog.Actions style={styles.dialogActions}>
+            {/* “No” / Cancel button on the left */}
             <Button
+              mode="contained"
               onPress={() => setShowLogoutConfirm(false)}
-              style={styles.dialogCancel}
-              labelStyle={styles.cancelLabel}
+              style={styles.noButton}
+              labelStyle={styles.noLabel}
             >
               No
             </Button>
+
+            {/* “Yes” / Confirm button on the right */}
             <Button
               mode="outlined"
               onPress={confirmLogout}
-              style={styles.dialogConfirm}
-              labelStyle={styles.confirmLabel}
+              style={styles.yesButton}
+              labelStyle={styles.yesLabel}
             >
               Yes
             </Button>

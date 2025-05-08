@@ -179,9 +179,101 @@ export default function AccountScreen() {
       {/* Settings Sections */}
       <Section title="Account Settings">
         <SettingItem label="Account" onPress={handleNavigate('/settings/account')} />
-        {/* …other items… */}
+        <SettingItem
+          label="Content & Social"
+          onPress={handleNavigate('/settings/content')}
+        />
+        <SettingItem
+          label="Data & Privacy"
+          onPress={handleNavigate('/settings/privacy')}
+        />
+        <SettingItem
+          label="Authorized Apps"
+          onPress={handleNavigate('/settings/apps')}
+        />
+        <SettingItem label="Devices" onPress={handleNavigate('/settings/devices')} />
+        <SettingItem
+          label="Connections"
+          onPress={handleNavigate('/settings/connections')}
+        />
+        <SettingItem label="Clips" onPress={handleNavigate('/settings/clips')} />
+        <SettingItem
+          label="Scan QR Code"
+          onPress={handleNavigate('/settings/qr')}
+        />
       </Section>
 
+      <Section title="Security">
+        <SettingItem
+          label="Security"
+          onPress={handleNavigate('/settings/security')}
+        />
+        <SettingItem
+          label="Change Password"
+          onPress={handleNavigate('/settings/password')}
+        />
+        <SettingItem
+          label="Two-Factor Authentication"
+          onPress={handleNavigate('/settings/2fa')}
+        />
+        <SettingItem
+          label="Privacy"
+          onPress={handleNavigate('/settings/privacy')}
+        />
+        <SettingItem
+          label="Blocked Accounts"
+          onPress={handleNavigate('/settings/blocked')}
+        />
+      </Section>
+
+      <Section title="App Settings">
+        <SettingItem label="Voice" onPress={handleNavigate('/settings/voice')} />
+        <SettingItem
+          label="Appearance"
+          onPress={handleNavigate('/settings/appearance')}
+        />
+        <SettingItem
+          label="Accessibility"
+          onPress={handleNavigate('/settings/accessibility')}
+        />
+        <SettingItem
+          label="Language"
+          onPress={handleNavigate('/settings/language')}
+        />
+        <SettingItem label="Chat" onPress={handleNavigate('/settings/chat')} />
+        <SettingItem
+          label="Web Browser"
+          onPress={handleNavigate('/settings/browser')}
+        />
+        <SettingItem
+          label="Notifications"
+          onPress={handleNavigate('/settings/notifications')}
+        />
+        <SettingItem label="App Icon" onPress={handleNavigate('/settings/icon')} />
+        <SettingItem
+          label="Advanced"
+          onPress={handleNavigate('/settings/advanced')}
+        />
+      </Section>
+
+      <Section title="Support">
+        <SettingItem label="Support" onPress={handleNavigate('/settings/support')} />
+        <SettingItem
+          label="Upload debug logs"
+          onPress={handleNavigate('/settings/logs')}
+        />
+        <SettingItem
+          label="Acknowledgements"
+          onPress={handleNavigate('/settings/ack')}
+        />
+      </Section>
+
+      <Section title="What's New">
+        <SettingItem
+          label="What's New"
+          onPress={handleNavigate('/settings/whats-new')}
+        />
+      </Section>
       {/* Log Out Button */}
       <View style={styles.logoutCard}>
         <TouchableOpacity

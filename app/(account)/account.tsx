@@ -4,7 +4,8 @@ import { useNavigation } from '@react-navigation/native'; import { useRouter, us
 
 export default function AccountScreen() { const [userName, setUserName] = useState<string | null>(null); const [avatarUri, setAvatarUri] = useState<string>(); const [loading, setLoading] = useState<boolean>(true); const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
-const router = useRouter(); const navigation = useNavigation();
+const router = useRouter();
+const navigation = useNavigation();
 
 // Hide bottom tabs useLayoutEffect(() => { navigation.getParent()?.setOptions({ tabBarStyle: { display: 'none' } }); return () => { navigation.getParent()?.setOptions({ tabBarStyle: { display: 'flex' } }); }; }, [navigation]);
 
@@ -16,16 +17,16 @@ useEffect(() => { loadProfile(); }, [loadProfile]);
 
 // Image picker + upload const pickAndUploadAvatar = async () => { const perm = await ImagePicker.requestMediaLibraryPermissionsAsync(); if (!perm.granted) { Alert.alert('Permission required', 'Please allow photo access.'); return; }
 
-const result = await ImagePicker.launchImageLibraryAsync({
+  mediaTypes: ['photo'],
   mediaTypes: ImagePicker.MediaTypeOptions.Images,
   quality: 0.7,
   allowsEditing: true,
-});
+if (result.canceled) return;  
 if (result.cancelled) return;
 
 const token = await SecureStore.getItemAsync('auth_token');
 const form = new FormData();
-form.append('avatar', {
+  uri: result.assets?.[0]?.uri,
   uri: result.uri,
   name: 'avatar.jpg',
   type: 'image/jpeg',

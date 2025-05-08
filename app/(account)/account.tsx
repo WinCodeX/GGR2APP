@@ -8,29 +8,31 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  View
+  View,
 } from 'react-native';
-import { Avatar, Button } from 'react-native-paper';
+import { Avatar, Button, Dialog, Portal } from 'react-native-paper';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import Toast from 'react-native-toast-message';
 import api from '../../lib/api';
 
 export default function AccountScreen() {
   const [userName, setUserName] = useState<string | null>(null);
   const [avatarUri, setAvatarUri] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>(true);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+
   const router = useRouter();
   const navigation = useNavigation();
 
+  // Hide the bottom tab bar on this screen
   useLayoutEffect(() => {
-    navigation.getParent()?.setOptions({
-      tabBarStyle: { display: 'none' },
-    });
+    navigation.getParent()?.setOptions({ tabBarStyle: { display: 'none' } });
     return () => {
-      navigation.getParent()?.setOptions({
-        tabBarStyle: { display: 'flex' },
-      });
+      navigation.getParent()?.setOptions({ tabBarStyle: { display: 'flex' } });
     };
   }, [navigation]);
 
+  // Fetch profile
   useEffect(() => {
     (async () => {
       try {
@@ -52,14 +54,26 @@ export default function AccountScreen() {
     router.push(path);
   };
 
-  const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
+  const Section = ({
+    title,
+    children,
+  }: {
+    title: string;
+    children: React.ReactNode;
+  }) => (
     <>
       <Text style={styles.sectionTitle}>{title}</Text>
       <View style={styles.sectionCard}>{children}</View>
     </>
   );
 
-  const SettingItem = ({ label, onPress }: { label: string; onPress?: () => void }) => (
+  const SettingItem = ({
+    label,
+    onPress,
+  }: {
+    label: string;
+    onPress?: () => void;
+  }) => (
     <TouchableOpacity style={styles.item} onPress={onPress}>
       <View style={styles.itemContent}>
         <Text style={styles.itemText}>{label}</Text>
@@ -68,12 +82,27 @@ export default function AccountScreen() {
     </TouchableOpacity>
   );
 
+  const confirmLogout = async () => {
+    // Delete token
+    await SecureStore.deleteItemAsync('auth_token');
+    setShowLogoutConfirm(false);
+    // Show yellow toast
+    Toast.show({
+      type: 'warningToast',
+      text1: 'Logged out successfully',
+    });
+    // Navigate to login, replacing history
+    router.replace('/login');
+  };
+
   return (
     <ScrollView style={styles.container}>
-      {/* User Identity Card */}
+      {/* Profile Header */}
       <View style={styles.identityCard}>
         <View style={styles.identityLeft}>
-          <Text style={styles.userName}>{userName || 'No name'}</Text>
+          <Text style={styles.userName}>
+            {loading ? 'Loading…' : userName || 'No name'}
+          </Text>
           <Text style={styles.accountType}>Client account</Text>
         </View>
         <TouchableOpacity onPress={handleNavigate('/avatar')}>
@@ -116,52 +145,155 @@ export default function AccountScreen() {
         <Text style={styles.searchPlaceholder}>Search</Text>
       </View>
 
-      {/* FlatCard Sections */}
+      {/* Settings Sections */}
       <Section title="Account Settings">
-      
-        <SettingItem label="Account" />
-        <SettingItem label="Content & Social" />
-        <SettingItem label="Data & Privacy" />
-        <SettingItem label="Authorized Apps" />
-        <SettingItem label="Devices" />
-        <SettingItem label="Connections" />
-        <SettingItem label="Clips" />
-        <SettingItem label="Scan QR Code" />
+        <SettingItem label="Account" onPress={handleNavigate('/settings/account')} />
+        <SettingItem
+          label="Content & Social"
+          onPress={handleNavigate('/settings/content')}
+        />
+        <SettingItem
+          label="Data & Privacy"
+          onPress={handleNavigate('/settings/privacy')}
+        />
+        <SettingItem
+          label="Authorized Apps"
+          onPress={handleNavigate('/settings/apps')}
+        />
+        <SettingItem label="Devices" onPress={handleNavigate('/settings/devices')} />
+        <SettingItem
+          label="Connections"
+          onPress={handleNavigate('/settings/connections')}
+        />
+        <SettingItem label="Clips" onPress={handleNavigate('/settings/clips')} />
+        <SettingItem
+          label="Scan QR Code"
+          onPress={handleNavigate('/settings/qr')}
+        />
       </Section>
 
       <Section title="Security">
-        <SettingItem label="Security" />
-        <SettingItem label="Change Password" />
-        <SettingItem label="Two-Factor Authentication" />
-        <SettingItem label="Privacy" />
-        <SettingItem label="Blocked Accounts" />
-        </Section>
-        
+        <SettingItem
+          label="Security"
+          onPress={handleNavigate('/settings/security')}
+        />
+        <SettingItem
+          label="Change Password"
+          onPress={handleNavigate('/settings/password')}
+        />
+        <SettingItem
+          label="Two-Factor Authentication"
+          onPress={handleNavigate('/settings/2fa')}
+        />
+        <SettingItem
+          label="Privacy"
+          onPress={handleNavigate('/settings/privacy')}
+        />
+        <SettingItem
+          label="Blocked Accounts"
+          onPress={handleNavigate('/settings/blocked')}
+        />
+      </Section>
+
       <Section title="App Settings">
-        <SettingItem label="Voice" />
-        <SettingItem label="Appearance" />
-        <SettingItem label="Accessibility" />
-        <SettingItem label="Language" />
-        <SettingItem label="Chat" />
-        <SettingItem label="Web Browser" />
-        <SettingItem label="Notifications" />
-        <SettingItem label="App Icon" />
-        <SettingItem label="Advanced" />
+        <SettingItem label="Voice" onPress={handleNavigate('/settings/voice')} />
+        <SettingItem
+          label="Appearance"
+          onPress={handleNavigate('/settings/appearance')}
+        />
+        <SettingItem
+          label="Accessibility"
+          onPress={handleNavigate('/settings/accessibility')}
+        />
+        <SettingItem
+          label="Language"
+          onPress={handleNavigate('/settings/language')}
+        />
+        <SettingItem label="Chat" onPress={handleNavigate('/settings/chat')} />
+        <SettingItem
+          label="Web Browser"
+          onPress={handleNavigate('/settings/browser')}
+        />
+        <SettingItem
+          label="Notifications"
+          onPress={handleNavigate('/settings/notifications')}
+        />
+        <SettingItem label="App Icon" onPress={handleNavigate('/settings/icon')} />
+        <SettingItem
+          label="Advanced"
+          onPress={handleNavigate('/settings/advanced')}
+        />
       </Section>
 
       <Section title="Support">
-        <SettingItem label="Support" />
-        <SettingItem label="Upload debug logs to Support" />
-        <SettingItem label="Acknowledgements" />
+        <SettingItem label="Support" onPress={handleNavigate('/settings/support')} />
+        <SettingItem
+          label="Upload debug logs"
+          onPress={handleNavigate('/settings/logs')}
+        />
+        <SettingItem
+          label="Acknowledgements"
+          onPress={handleNavigate('/settings/ack')}
+        />
       </Section>
 
       <Section title="What's New">
-        <SettingItem label="What's New" />
+        <SettingItem
+          label="What's New"
+          onPress={handleNavigate('/settings/whats-new')}
+        />
       </Section>
 
-      <Section title="">
-        <SettingItem label="Log Out" onPress={() => Alert.alert('Log out', 'Implement logout logic')} />
-      </Section>
+      {/* Log Out Button Card */}
+      <View style={styles.logoutCard}>
+        <TouchableOpacity
+          style={styles.logoutButton}
+          onPress={() => setShowLogoutConfirm(true)}
+        >
+          <MaterialCommunityIcons
+            name="logout"
+            size={22}
+            color="#ff6b6b"
+            style={styles.logoutIcon}
+          />
+          <Text style={styles.logoutText}>Log Out</Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* Confirmation Dialog */}
+      <Portal>
+        <Dialog
+          visible={showLogoutConfirm}
+          onDismiss={() => setShowLogoutConfirm(false)}
+          style={styles.dialog}
+        >
+          <Dialog.Title style={styles.dialogTitle}>
+            Confirm Logout
+          </Dialog.Title>
+          <Dialog.Content>
+            <Text style={styles.dialogText}>
+              Are you sure you want to log out?
+            </Text>
+          </Dialog.Content>
+          <Dialog.Actions style={styles.dialogActions}>
+            <Button
+              onPress={() => setShowLogoutConfirm(false)}
+              style={styles.dialogCancel}
+              labelStyle={styles.cancelLabel}
+            >
+              No
+            </Button>
+            <Button
+              mode="outlined"
+              onPress={confirmLogout}
+              style={styles.dialogConfirm}
+              labelStyle={styles.confirmLabel}
+            >
+              Yes
+            </Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
     </ScrollView>
   );
 }
@@ -248,7 +380,6 @@ const styles = StyleSheet.create({
   item: {
     paddingVertical: 12,
     paddingHorizontal: 12,
-    
   },
   itemContent: {
     flexDirection: 'row',
@@ -262,5 +393,56 @@ const styles = StyleSheet.create({
   itemArrow: {
     color: '#888',
     fontSize: 18,
+  },
+  logoutCard: {
+    backgroundColor: '#282a36',
+    margin: 16,
+    borderRadius: 12,
+    padding: 12,
+  },
+  logoutButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  logoutIcon: {
+    marginRight: 12,
+  },
+  logoutText: {
+    color: '#ff6b6b',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  dialog: {
+    backgroundColor: '#282a36',
+    borderRadius: 12,
+  },
+  dialogTitle: {
+    color: '#f8f8f2',
+    fontWeight: 'bold',
+  },
+  dialogText: {
+    color: '#ccc',
+    fontSize: 15,
+  },
+  dialogActions: {
+    justifyContent: 'space-between',
+    paddingHorizontal: 12,
+  },
+  dialogCancel: {
+    backgroundColor: '#bd93f9',
+    borderRadius: 6,
+    marginRight: 8,
+  },
+  cancelLabel: {
+    color: '#fff',
+  },
+  dialogConfirm: {
+    borderColor: '#ff5555',
+    borderWidth: 1,
+    borderRadius: 6,
+  },
+  confirmLabel: {
+    color: '#ff5555',
+    fontWeight: 'bold',
   },
 });

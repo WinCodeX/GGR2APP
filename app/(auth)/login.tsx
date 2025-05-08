@@ -1,88 +1,99 @@
-import { useRouter } from 'expo-router'; import * as SecureStore from 'expo-secure-store'; import React, { useState } from 'react'; import { StyleSheet, Text, View } from 'react-native'; import { Button, TextInput, useTheme } from 'react-native-paper'; import Toast from 'react-native-toast-message'; import api from '../../lib/api';
+// app/(auth)/login.tsx
 
-export default function LoginScreen() { const [email, setEmail] = useState(''); const [password, setPassword] = useState(''); const [showPassword, setShowPassword] = useState(false); const [errorMsg, setErrorMsg] = useState(''); const router = useRouter(); const theme = useTheme();
+import React, { useState } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import { useRouter } from 'expo-router';
+import * as SecureStore from 'expo-secure-store';
+import Toast from 'react-native-toast-message';
+import { Button, TextInput } from 'react-native-paper';
+import api from '../../lib/api';
 
-const handleLogin = async () => { setErrorMsg(''); try { const response = await api.post('/login', { email, password, });
+export default function LoginScreen() {
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [errorMsg, setErrorMsg] = useState<string>('');
+  const router = useRouter();
 
-const token = response?.data?.token;
-  if (token) {
-    await SecureStore.setItemAsync('auth_token', token);
-    Toast.show({
-      type: 'defaultToast',
-      text1: 'Welcome back!',
-    });
-    router.replace('/');
-  } else {
-    setErrorMsg('Login failed: token missing');
-  }
-} catch (error: any) {
-  console.error('Login error:', error?.response?.data || error.message);
-  setErrorMsg('Invalid email or password');
-}
+  const handleLogin = async () => {
+    setErrorMsg('');
+    try {
+      const response = await api.post('/login', { email, password });
+      const token = response?.data?.token;
 
-};
-
-const navigateToSignup = () => { router.push('/signup'); };
-
-return ( <View style={styles.container}> <Text style={styles.title}>GGR2App Login</Text>
-
-<TextInput
-    label="Email"
-    value={email}
-    onChangeText={setEmail}
-    keyboardType="email-address"
-    autoCapitalize="none"
-    mode="outlined"
-    style={styles.input}
-    textColor="#f8f8f2"
-    placeholderTextColor="#ccc"
-    outlineColor="#44475a"
-    activeOutlineColor="#bd93f9"
-  />
-
-  <TextInput
-    label="Password"
-    value={password}
-    onChangeText={setPassword}
-    secureTextEntry={!showPassword}
-    mode="outlined"
-    style={styles.input}
-    textColor="#f8f8f2"
-    placeholderTextColor="#ccc"
-    outlineColor="#44475a"
-    activeOutlineColor="#bd93f9"
-    right={
-      <TextInput.Icon
-        icon={showPassword ? 'eye-off' : 'eye'}
-        onPress={() => setShowPassword((prev) => !prev)}
-        forceTextInputFocus={false}
-        size={22}
-        color="#aaa"
-      />
+      if (token) {
+        await SecureStore.setItemAsync('auth_token', token);
+        Toast.show({ type: 'defaultToast', text1: 'Welcome back!' });
+        router.replace('/');
+      } else {
+        setErrorMsg('Login failed: token missing');
+      }
+    } catch (err: any) {
+      console.error('Login error:', err?.response?.data || err.message);
+      setErrorMsg('Invalid email or password');
     }
-  />
+  };
 
-  {errorMsg ? <Text style={styles.error}>{errorMsg}</Text> : null}
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>GGR2App Login</Text>
 
-  <Button
-    mode="contained"
-    onPress={handleLogin}
-    style={styles.button}
-    labelStyle={{ fontWeight: 'bold', color: '#fff' }}
-  >
-    Log In
-  </Button>
+      <TextInput
+        label="Email"
+        value={email}
+        onChangeText={setEmail}
+        keyboardType="email-address"
+        autoCapitalize="none"
+        mode="outlined"
+        style={styles.input}
+        textColor="#f8f8f2"
+        placeholderTextColor="#ccc"
+        outlineColor="#44475a"
+        activeOutlineColor="#bd93f9"
+      />
 
-  <Button
-    onPress={navigateToSignup}
-    textColor="#bd93f9"
-    style={{ marginTop: 12 }}
-  >
-    Don't have an account? Sign up
-  </Button>
-</View>
+      <TextInput
+        label="Password"
+        value={password}
+        onChangeText={setPassword}
+        secureTextEntry={!showPassword}
+        mode="outlined"
+        style={styles.input}
+        textColor="#f8f8f2"
+        placeholderTextColor="#ccc"
+        outlineColor="#44475a"
+        activeOutlineColor="#bd93f9"
+        right={
+          <TextInput.Icon
+            icon={showPassword ? 'eye-off' : 'eye'}
+            onPress={() => setShowPassword((v) => !v)}
+            forceTextInputFocus={false}
+            color="#aaa"
+          />
+        }
+      />
 
-); }
+      {errorMsg.length > 0 && <Text style={styles.error}>{errorMsg}</Text>}
+
+      <Button
+        mode="contained"
+        onPress={handleLogin}
+        style={styles.button}
+        labelStyle={{ color: '#fff', fontWeight: 'bold' }}
+      >
+        Log In
+      </Button>
+
+      <Button
+        onPress={() => router.push('/signup')}
+        textColor="#bd93f9"
+        style={styles.link}
+      >
+        Don't have an account? Sign up
+      </Button>
+    </View>
+  );
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -108,6 +119,9 @@ const styles = StyleSheet.create({
     marginTop: 8,
     paddingVertical: 10,
     borderRadius: 10,
+  },
+  link: {
+    marginTop: 12,
   },
   error: {
     color: '#ff5555',

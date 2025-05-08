@@ -1,8 +1,8 @@
-import { useNavigation } from '@react-navigation/native'; import { useRouter } from 'expo-router'; import * as SecureStore from 'expo-secure-store'; import React, { useEffect, useLayoutEffect, useState } from 'react'; import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'; import { Avatar, Button, Dialog, Portal } from 'react-native-paper'; import { MaterialCommunityIcons } from '@expo/vector-icons'; import api from '../../lib/api';
+import { useNavigation } from '@react-navigation/native'; import { useRouter } from 'expo-router'; import * as SecureStore from 'expo-secure-store'; import React, { useEffect, useLayoutEffect, useState } from 'react'; import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View, } from 'react-native'; import { Avatar, Button, Dialog, Portal } from 'react-native-paper'; import { MaterialCommunityIcons } from '@expo/vector-icons'; import api from '../../lib/api';
 
 export default function AccountScreen() { const [userName, setUserName] = useState<string | null>(null); const [avatarUri, setAvatarUri] = useState<string | undefined>(undefined); const [showLogoutConfirm, setShowLogoutConfirm] = useState(false); const router = useRouter(); const navigation = useNavigation();
 
-useLayoutEffect(() => { navigation.getParent()?.setOptions({ tabBarStyle: { display: 'none' } }); return () => { navigation.getParent()?.setOptions({ tabBarStyle: { display: 'flex' } }); }; }, [navigation]);
+useLayoutEffect(() => { navigation.getParent()?.setOptions({ tabBarStyle: { display: 'none' }, }); return () => { navigation.getParent()?.setOptions({ tabBarStyle: { display: 'flex' }, }); }; }, [navigation]);
 
 useEffect(() => { (async () => { try { const token = await SecureStore.getItemAsync('auth_token'); const res = await api.get('/me', { headers: { Authorization: Bearer ${token} }, }); setUserName(res.data.name || null); setAvatarUri(res.data.avatar_url); } catch { Alert.alert('Error', 'Unable to load profile.'); } })(); }, []);
 

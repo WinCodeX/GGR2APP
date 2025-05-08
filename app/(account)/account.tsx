@@ -2,7 +2,7 @@ import { useNavigation } from '@react-navigation/native'; import { useRouter } f
 
 export default function AccountScreen() { const [userName, setUserName] = useState<string | null>(null); const [avatarUri, setAvatarUri] = useState<string | undefined>(undefined); const router = useRouter(); const navigation = useNavigation();
 
-useLayoutEffect(() => { navigation.getParent()?.setOptions({ tabBarStyle: { display: 'none' }, }); return () => { navigation.getParent()?.setOptions({ tabBarStyle: { display: 'flex' }, }); }; }, [navigation]);
+useLayoutEffect(() => { navigation.getParent()?.setOptions({ tabBarStyle: { display: 'none' } }); return () => { navigation.getParent()?.setOptions({ tabBarStyle: { display: 'flex' } }); }; }, [navigation]);
 
 useEffect(() => { (async () => { try { const token = await SecureStore.getItemAsync('auth_token'); const res = await api.get('/me', { headers: { Authorization: Bearer ${token} }, }); setUserName(res.data.name || null); setAvatarUri(res.data.avatar_url); } catch { Alert.alert('Error', 'Unable to load profile.'); } })(); }, []);
 
@@ -12,10 +12,9 @@ const Section = ({ title, children }: { title: string; children: React.ReactNode
 
 const SettingItem = ({ label, icon, onPress }: { label: string; icon: string; onPress?: () => void }) => ( <TouchableOpacity style={styles.item} onPress={onPress}> <View style={styles.itemContent}> <MaterialCommunityIcons name={icon} size={20} color="#f8f8f2" style={styles.itemIcon} /> <Text style={styles.itemText}>{label}</Text> <Text style={styles.itemArrow}>›</Text> </View> </TouchableOpacity> );
 
-return ( <ScrollView style={styles.container}> {/* User Identity Card */} <View style={styles.identityCard}> <View style={styles.identityLeft}> <Text style={styles.userName}>{userName || 'No name'}</Text> <Text style={styles.accountType}>Client account</Text> </View> <TouchableOpacity onPress={handleNavigate('/avatar')}> <Avatar.Image size={60} source={ avatarUri ? { uri: avatarUri } : require('../../assets/images/avatar-placeholder.png') } /> </TouchableOpacity> </View>
+return ( <ScrollView style={styles.container}> <View style={styles.identityCard}> <View style={styles.identityLeft}> <Text style={styles.userName}>{userName || 'No name'}</Text> <Text style={styles.accountType}>Client account</Text> </View> <TouchableOpacity onPress={handleNavigate('/avatar')}> <Avatar.Image size={60} source={avatarUri ? { uri: avatarUri } : require('../../assets/images/avatar-placeholder.png')} /> </TouchableOpacity> </View>
 
-{/* Premium Box */}
-  <View style={styles.premiumBox}>
+<View style={styles.premiumBox}>
     <Text style={styles.premiumText}>Amp up your profile</Text>
     <View style={styles.premiumButtons}>
       <Button
@@ -37,12 +36,10 @@ return ( <ScrollView style={styles.container}> {/* User Identity Card */} <View 
     </View>
   </View>
 
-  {/* Search Bar */}
   <View style={styles.searchBox}>
     <Text style={styles.searchPlaceholder}>Search</Text>
   </View>
 
-  {/* FlatCard Sections */}
   <Section title="Account Settings">
     <SettingItem label="Account" icon="account" />
     <SettingItem label="Content & Social" icon="account-group-outline" />
@@ -84,7 +81,6 @@ return ( <ScrollView style={styles.container}> {/* User Identity Card */} <View 
     <SettingItem label="What's New" icon="new-box" />
   </Section>
 
-  {/* Logout Card */}
   <View style={styles.logoutCard}>
     <TouchableOpacity style={styles.logoutButton} onPress={() => Alert.alert('Log out', 'Implement logout logic')}>
       <MaterialCommunityIcons name="logout" size={22} color="#ff6b6b" style={styles.logoutIcon} />

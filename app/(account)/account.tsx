@@ -3,7 +3,7 @@
 import { useNavigation } from '@react-navigation/native';
 import { useRouter, useFocusEffect } from 'expo-router';
 import * as SecureStore from 'expo-secure-store';
-import * as ImagePicker from 'expo-image-picker';       // ← new
+import * as ImagePicker from 'expo-image-picker';
 import React, {
   useCallback,
   useEffect,
@@ -42,19 +42,21 @@ export default function AccountScreen() {
   }, [navigation]);
 
   // Load profile from API
-  const loadProfile = useCallback(async () => {
-    try {
-      const token = await SecureStore.getItemAsync('auth_token');
-      const res = await api.get('/me', {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setUserName(res.data.name || null);
-      setAvatarUri(res.data.avatar);
-    } catch {
-      Alert.alert('Error', 'Unable to load profile.');
-    } finally {
-      setLoading(false);
-    }
+  const loadProfile = useCallback(() => {
+    (async () => {
+      try {
+        const token = await SecureStore.getItemAsync('auth_token');
+        const res = await api.get('/me', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setUserName(res.data.name || null);
+        setAvatarUri(res.data.avatar);  // correct key from backend
+      } catch {
+        Alert.alert('Error', 'Unable to load profile.');
+      } finally {
+        setLoading(false);
+      }
+    })();
   }, []);
 
   useEffect(() => {
@@ -70,26 +72,24 @@ export default function AccountScreen() {
 
   // Image picker + upload
   const pickAndUploadAvatar = async () => {
-    // Ask permission
     const perm = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!perm.granted) {
       Alert.alert('Permission required', 'Please allow photo access.');
       return;
     }
 
-    // Pick
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       quality: 0.7,
       allowsEditing: true,
     });
-    if (result.cancelled) return;
+    if (result.canceled || !result.assets?.length) return;
 
-    // Upload
+    const pickedUri = result.assets[0].uri;
     const token = await SecureStore.getItemAsync('auth_token');
     const form = new FormData();
     form.append('avatar', {
-      uri: result.uri,
+      uri: pickedUri,
       name: 'avatar.jpg',
       type: 'image/jpeg',
     } as any);
@@ -135,7 +135,6 @@ export default function AccountScreen() {
           <Text style={styles.userName}>{userName || 'No name'}</Text>
           <Text style={styles.accountType}>Client account</Text>
         </View>
-        {/* Tap to pick */}
         <TouchableOpacity onPress={pickAndUploadAvatar}>
           <Avatar.Image
             size={60}
@@ -274,6 +273,7 @@ export default function AccountScreen() {
           onPress={handleNavigate('/settings/whats-new')}
         />
       </Section>
+
       {/* Log Out Button */}
       <View style={styles.logoutCard}>
         <TouchableOpacity
@@ -370,7 +370,7 @@ const styles = StyleSheet.create({
     marginBottom: 6,
     paddingHorizontal: 18,
   },
-  item: { paddingVertical: 12, paddingHorizontal: 12 },
+  item: { paddingVertical: 12,	paddingHorizontal: 12 },
   itemContent: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   itemText: { color: '#f8f8f2', fontSize: 15 },
   itemArrow: { color: '#888', fontSize: 18 },

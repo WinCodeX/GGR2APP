@@ -39,5 +39,9 @@ export default function RootLayout() {
     );
   }
 
-  return <Slot />;
-}
+  return (
+  <>
+    <Slot />
+    <Toast config={toastConfig} />
+  </>
+);

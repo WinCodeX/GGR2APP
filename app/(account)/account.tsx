@@ -17,8 +17,8 @@ useEffect(() => { loadProfile(); }, [loadProfile]);
 
 // Image picker + upload const pickAndUploadAvatar = async () => { const perm = await ImagePicker.requestMediaLibraryPermissionsAsync(); if (!perm.granted) { Alert.alert('Permission required', 'Please allow photo access.'); return; }
 
+
   mediaTypes: ['photo'],
-  mediaTypes: ImagePicker.MediaTypeOptions.Images,
   quality: 0.7,
   allowsEditing: true,
 if (result.canceled) return;  

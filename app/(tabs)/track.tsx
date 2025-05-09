@@ -4,6 +4,9 @@ import React, { useEffect, useState } from 'react'; import { View, Text, StyleSh
 
 const { width } = Dimensions.get('window');
 
+const PURPLE = '#6272a4'; 
+const BG = '#1e1e2e'; 
+
 export default function TrackScreen() { const router = useRouter(); const [packages, setPackages] = useState<Package[] | null>(null); const [loading, setLoading] = useState(true); const [search, setSearch] = useState('');
 
 useEffect(() => { (async () => { // TODO: replace with real fetch setTimeout(() => { setPackages([]); setLoading(false); }, 500); })(); }, []);
@@ -106,8 +109,6 @@ return ( <SafeAreaView style={styles.container}> {/* Header */} <View style={sty
 
 ); }
 
-const PURPLE = '#6272a4'; 
-const BG = '#1e1e2e'; 
 
 
 const styles = StyleSheet.create({ container: { flex: 1, backgroundColor: BG, paddingHorizontal: 16, paddingTop: 16, }, loader: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: BG }, loadingText: { color: '#fff' },

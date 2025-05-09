@@ -2,13 +2,13 @@
 
 import React, { useEffect, useState } from 'react';
 import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  FlatList,
-  TouchableOpacity,
   Dimensions,
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import { Button } from 'react-native-paper';
 import { Package } from '../../lib/types'; // your package type
@@ -39,7 +39,7 @@ export default function TrackScreen() {
     return (
       <View style={styles.emptyContainer}>
         <Image
-          source={require('../../assets/images/placeholder-empty.png')}
+          source={require('../../assets/images/placeholderempty.svg')}
           style={styles.emptyImage}
           resizeMode="contain"
         />

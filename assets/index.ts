@@ -6,7 +6,8 @@ const Images = {
     // Add a fallback in case of missing images
     avatarPlaceholder: require('./images/avatar-placeholder.png'),
     // Add other centralized images here
-    
+    placeholderempty: require('./images/placeholderempty.svg'),
+
   };
   
   export default Images;

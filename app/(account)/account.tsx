@@ -49,6 +49,9 @@ export default function AccountScreen() {
         const res = await api.get('/me', {
           headers: { Authorization: `Bearer ${token}` },
         });
+
+console.log('API response:', res.data);  // <- Add this line to debug
+
         setUserName(res.data.name || null);
         setAvatarUri(res.data.avatar);  // correct key from backend
       } catch {

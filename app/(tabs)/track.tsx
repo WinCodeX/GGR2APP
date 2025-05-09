@@ -39,7 +39,7 @@ export default function TrackScreen() {
     return (
       <View style={styles.emptyContainer}>
         <Image
-          source={require('../../assets/images/placeholderempty.svg')}
+          source={require('../../assets/images/placeholderempty.png')}
           style={styles.emptyImage}
           resizeMode="contain"
         />

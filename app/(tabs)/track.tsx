@@ -1,6 +1,6 @@
 import React, { useState } from 'react'; import { View, Text, StyleSheet, FlatList, SafeAreaView, TextInput, } from 'react-native';
 
-const PURPLE = '#6272a4'; const BG = '#1e1e2e';
+const PURPLE = '#bd93f9'; const BG = '#1a1b26';
 
 const dummyPackages = [ { id: 1, name: 'John Doe', address: '123 Main St', amount: 500, status: 'awaiting' }, { id: 2, name: 'Jane Smith', address: '456 Side Rd', amount: 750, status: 'processing' }, ];
 
@@ -29,5 +29,5 @@ return ( <SafeAreaView style={styles.container}> <View style={styles.header}> <T
 
 ); }
 
-const styles = StyleSheet.create({ container: { flex: 1, backgroundColor: BG, padding: 16, }, header: { flexDirection: 'row', alignItems: 'center', marginBottom: 12, }, headerTitle: { color: '#f8f8f2', fontSize: 22, fontWeight: 'bold', }, searchInput: { backgroundColor: '#2e2e3e', color: '#f8f8f2', paddingHorizontal: 16, paddingVertical: 10, borderRadius: 24, marginBottom: 16, }, card: { backgroundColor: '#282a36', padding: 16, borderRadius: 8, marginBottom: 12, }, name: { color: '#fff', fontSize: 18, }, address: { color: '#bbb', marginTop: 4, }, amount: { color: '#fff', fontWeight: 'bold', marginTop: 8, }, });
+const styles = StyleSheet.create({ container: { flex: 1, backgroundColor: BG, padding: 16, }, header: { flexDirection: 'row', alignItems: 'center', marginBottom: 12, }, headerTitle: { color: '#f8f8f2', fontSize: 22, fontWeight: 'bold', }, searchInput: { backgroundColor: '#2e2e3e', color: '#f8f8f2', paddingHorizontal: 16, paddingVertical: 10, borderRadius: 24, borderColor: PURPLE, borderWidth: 1, marginBottom: 16, }, card: { backgroundColor: '#2e2e3e', borderColor: PURPLE, borderWidth: 1, padding: 16, borderRadius: 8, marginBottom: 12, }, name: { color: '#fff', fontSize: 18, }, address: { color: '#bbb', marginTop: 4, }, amount: { color: '#fff', fontWeight: 'bold', marginTop: 8, }, });
 

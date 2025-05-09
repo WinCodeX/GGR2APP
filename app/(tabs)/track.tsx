@@ -104,5 +104,156 @@ return ( <SafeAreaView style={styles.container}> <View style={styles.header}> <T
 
 ); }
 
-const styles = StyleSheet.create({ container: { flex: 1, backgroundColor: BG, paddingHorizontal: 16, paddingTop: 16, }, loader: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: BG, }, loadingText: { color: '#fff', }, header: { flexDirection: 'row', alignItems: 'center', marginBottom: 16, }, backIcon: { width: 24, height: 24, marginRight: 12, tintColor: '#f1fa8c', }, headerTitle: { color: '#f8f8f2', fontSize: 22, fontWeight: 'bold', }, searchInput: { backgroundColor: '#2e2e3e', color: '#f8f8f2', paddingHorizontal: 16, paddingVertical: 10, borderRadius: 24, marginBottom: 16, }, emptyContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: 32, }, emptyImage: { width: width * 0.6, height: width * 0.6, marginBottom: 24, tintColor: '#888', }, emptyText: { color: '#ccc', fontSize: 18, marginBottom: 24, }, startBtn: { borderRadius: 8, }, startBtnContent: { height: 48, }, startBtnLabel: { color: '#fff', fontSize: 16, }, list: { paddingBottom: 16, }, card: { backgroundColor: '#282a36', borderRadius: 12, padding: 16, marginBottom: 16, }, cardHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', }, name: { color: '#fff', fontSize: 18, fontWeight: '600', }, address: { color: '#888', marginTop: 4, }, amount: { color: '#fff', fontSize: 16, }, statusRow: { marginTop: 16, }, statusItem: { flexDirection: 'row', alignItems: 'center', marginBottom: 8, }, dot: { width: 8, height: 8, borderRadius: 4, backgroundColor: '#444', marginRight: 8, }, dotActive: { backgroundColor: PURPLE, }, statusLabel: { color: '#555', }, statusLabelActive: { color: '#fff', fontWeight: '500', }, actionRow: { flexDirection: 'row', marginTop: 16, justifyContent: 'space-between', }, actionBtn: { flex: 1, borderRadius: 8, paddingVertical: 12, alignItems: 'center', }, trackBtn: { backgroundColor: PURPLE, marginRight: 8, }, trackLabel: { color: '#fff', fontSize: 16, }, viewAllBtn: { backgroundColor: '#333', }, viewAllLabel: { color: '#fff', fontSize: 16, }, });
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: BG,
+    paddingHorizontal: 16,
+    paddingTop: 16,
+  },
+  loader: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: BG,
+  },
+  loadingText: {
+    color: '#fff',
+  },
 
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  backIcon: {
+    width: 24,
+    height: 24,
+    marginRight: 12,
+    tintColor: '#f1fa8c',
+  },
+  headerTitle: {
+    color: '#f8f8f2',
+    fontSize: 22,
+    fontWeight: 'bold',
+  },
+
+  searchInput: {
+    backgroundColor: '#2e2e3e',
+    color: '#f8f8f2',
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 24,
+    marginBottom: 16,
+  },
+
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 32,
+  },
+  emptyImage: {
+    width: width * 0.6,
+    height: width * 0.6,
+    marginBottom: 24,
+    tintColor: '#888',
+  },
+  emptyText: {
+    color: '#ccc',
+    fontSize: 18,
+    marginBottom: 24,
+  },
+  startBtn: {
+    borderRadius: 8,
+  },
+  startBtnContent: {
+    height: 48,
+  },
+  startBtnLabel: {
+    color: '#fff',
+    fontSize: 16,
+  },
+
+  list: {
+    paddingBottom: 16,
+  },
+
+  card: {
+    backgroundColor: '#282a36',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 16,
+  },
+  cardHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  name: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: '600',
+  },
+  address: {
+    color: '#888',
+    marginTop: 4,
+  },
+  amount: {
+    color: '#fff',
+    fontSize: 16,
+  },
+
+  statusRow: {
+    marginTop: 16,
+  },
+  statusItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  dot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: '#444',
+    marginRight: 8,
+  },
+  dotActive: {
+    backgroundColor: PURPLE,
+  },
+  statusLabel: {
+    color: '#555',
+  },
+  statusLabelActive: {
+    color: '#fff',
+    fontWeight: '500',
+  },
+
+  actionRow: {
+    flexDirection: 'row',
+    marginTop: 16,
+    justifyContent: 'space-between',
+  },
+  actionBtn: {
+    flex: 1,
+    borderRadius: 8,
+    paddingVertical: 12,
+    alignItems: 'center',
+  },
+  trackBtn: {
+    backgroundColor: PURPLE,
+    marginRight: 8,
+  },
+  trackLabel: {
+    color: '#fff',
+    fontSize: 16,
+  },
+  viewAllBtn: {
+    backgroundColor: '#333',
+  },
+  viewAllLabel: {
+    color: '#fff',
+    fontSize: 16,
+  },
+});

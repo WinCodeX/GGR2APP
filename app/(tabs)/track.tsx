@@ -106,7 +106,9 @@ return ( <SafeAreaView style={styles.container}> {/* Header */} <View style={sty
 
 ); }
 
-const PURPLE = '#6272a4'; const BG = '#1e1e2e'; const BG = '#1e1e2e';
+const PURPLE = '#6272a4'; 
+const BG = '#1e1e2e'; 
+
 
 const styles = StyleSheet.create({ container: { flex: 1, backgroundColor: BG, paddingHorizontal: 16, paddingTop: 16, }, loader: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: BG }, loadingText: { color: '#fff' },
 

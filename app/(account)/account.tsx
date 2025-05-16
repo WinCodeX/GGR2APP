@@ -50,7 +50,7 @@ export default function AccountScreen() {
           headers: { Authorization: `Bearer ${token}` },
         });
         setUserName(res.data.name || null);
-        setAvatarUri(res.data.avatar);  // correct key from backend
+        setAvatarUri(res.data.avatar_url); // WRONG — `avatar_url` is only returned on update // correct key from backend
       } catch {
         Alert.alert('Error', 'Unable to load profile.');
       } finally {

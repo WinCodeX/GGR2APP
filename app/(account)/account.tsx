@@ -46,9 +46,11 @@ export default function AccountScreen() {
     (async () => {
       try {
         const token = await SecureStore.getItemAsync('auth_token');
-        const res = await api.get('/me', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+console.log("Token used for /me:", token); // <--- log before using it
+
+const res = await api.get('/me', {
+  headers: { Authorization: `Bearer ${token}` },
+});
         setUserName(res.data.username || null);
         setAvatarUri(res.data.avatar_url); // WRONG — `avatar_url` is only returned on update // correct key from backend
       } catch {

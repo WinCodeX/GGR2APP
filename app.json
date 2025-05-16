@@ -8,7 +8,6 @@
     "scheme": "ggr2mobile",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
-    "host": "lan",                <-- THIS LINE IS THE FIX
     "ios": {
       "supportsTablet": true
     },

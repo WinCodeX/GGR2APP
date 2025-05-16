@@ -50,6 +50,7 @@ console.log("Token used for /me:", token); // <--- log before using it
 
 const res = await api.get('/me', {
   headers: { Authorization: `Bearer ${token}` },
+Accept: 'application/json',
 });
         setUserName(res.data.username || null);
         setAvatarUri(res.data.avatar_url); // WRONG — `avatar_url` is only returned on update // correct key from backend

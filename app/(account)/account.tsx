@@ -49,7 +49,7 @@ export default function AccountScreen() {
         const res = await api.get('/me', {
           headers: { Authorization: `Bearer ${token}` },
         });
-        setUserName(res.data.name || null);
+        setUserName(res.data.username || null);
         setAvatarUri(res.data.avatar_url); // WRONG — `avatar_url` is only returned on update // correct key from backend
       } catch {
         Alert.alert('Error', 'Unable to load profile.');
